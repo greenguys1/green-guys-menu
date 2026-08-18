@@ -444,22 +444,24 @@
 
   #tv-stage{
     display:none;
-    width: 1080px;
-    height: 1920px;
-    flex-shrink:0;
-    transform-origin: center center;
-    position:relative;
+    width: 100vw;
+    height: 100vh;
+    position:fixed;
+    top:0; left:0;
+    flex-direction:column;
     background: radial-gradient(120% 140% at 12% -10%, var(--bg-1) 0%, var(--bg-0) 55%, #06120f 100%);
   }
-  body.tv #tv-stage{ display:block; }
+  body.tv{ overflow:hidden; }
+  body.tv #tv-stage{ display:flex; }
   body.tv > header, body.tv > main, body.tv > footer{ display:none; }
 
   #tv-stage .t-header{
+    flex-shrink:0;
     text-align:center;
-    padding: 40px 20px 20px;
+    padding: clamp(16px,3vh,40px) 20px clamp(10px,2vh,20px);
   }
   #tv-stage .t-logo{
-    width: 220px;
+    width: min(220px, 18vw);
     height: auto;
     margin: 0 auto;
     display:block;
@@ -467,25 +469,26 @@
   }
 
   #tv-stage .t-main-wrap{
-    position:absolute;
-    top: 280px; left: 0; right: 0; bottom: 60px;
+    flex: 1 1 auto;
+    min-height:0;
     display:flex;
     align-items:center;
     justify-content:center;
     overflow:hidden;
   }
   #tv-stage .t-main{
-    width: 980px;
+    width: min(1820px, 96vw);
     flex-shrink:0;
     display:grid;
-    grid-template-columns: 1fr;
-    gap: 40px;
+    grid-template-columns: 1fr 1fr;
+    gap: 44px;
     transform-origin: center center;
   }
-  #tv-stage .t-col{ display:flex; flex-direction:column; gap: 34px; }
+  #tv-stage .t-col{ display:flex; flex-direction:column; gap: 30px; }
 
   #tv-stage .t-footer{
-    position:absolute; bottom:20px; left:0; right:0;
+    flex-shrink:0;
+    padding: clamp(10px,2vh,20px) 20px;
     text-align:center;
     font-family:'JetBrains Mono', monospace;
     font-size: 18px; letter-spacing:1.5px; color: var(--gold);
@@ -912,14 +915,6 @@ if (__qsMatch){
   var editToggleForTV = document.getElementById("edit-toggle-btn");
   if (editToggleForTV) editToggleForTV.style.display = "none";
 
-  const stage = document.getElementById("tv-stage");
-  function scaleStage(){
-    const scale = Math.min(window.innerWidth / 1080, window.innerHeight / 1920);
-    stage.style.transform = `scale(${scale})`;
-  }
-  scaleStage();
-  window.addEventListener("resize", scaleStage);
-
   const tvMain = document.getElementById("tv-menu-root");
   function fitTvContent(){
     if (!tvMain) return;
@@ -929,19 +924,24 @@ if (__qsMatch){
     const availH = wrap.clientHeight;
     const naturalW = tvMain.scrollWidth;
     const naturalH = tvMain.scrollHeight;
-    if (naturalW === 0 || naturalH === 0) return;
-    let fitScale = Math.min(availW / naturalW, availH / naturalH);
-    fitScale = Math.min(fitScale, 1.15);
-    fitScale = Math.max(fitScale, 0.35);
+    if (naturalW === 0 || naturalH === 0 || availW === 0 || availH === 0) return;
+    const fitScale = Math.min(availW / naturalW, availH / naturalH, 1.15);
     tvMain.style.transform = `scale(${fitScale})`;
   }
   const origRenderAllForTV = renderAll;
   renderAll = function(){
     origRenderAllForTV();
-    setTimeout(fitTvContent, 0);
+    fitTvContent();
+    setTimeout(fitTvContent, 60);
   };
-  setTimeout(fitTvContent, 0);
+  fitTvContent();
+  setTimeout(fitTvContent, 60);
+  setTimeout(fitTvContent, 400);
+  if (document.fonts && document.fonts.ready){
+    document.fonts.ready.then(fitTvContent);
+  }
   window.addEventListener("resize", fitTvContent);
+  window.addEventListener("orientationchange", () => setTimeout(fitTvContent, 200));
 
   function tryFullscreen(){
     var el = document.documentElement;
@@ -949,11 +949,11 @@ if (__qsMatch){
     if (req){
       try { req.call(el); } catch(e){}
     }
-    setTimeout(scaleStage, 300);
     setTimeout(fitTvContent, 300);
   }
   document.body.addEventListener("click", tryFullscreen);
   document.body.addEventListener("keydown", tryFullscreen);
+  document.addEventListener("fullscreenchange", () => setTimeout(fitTvContent, 200));
 }
 </script>
 
