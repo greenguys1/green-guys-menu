@@ -459,7 +459,7 @@
     padding: 32px 20px 10px;
   }
   #tv-stage .t-logo{
-    width: 150px;
+    width: 230px;
     height: auto;
     margin: 0 auto;
     display:block;
@@ -473,7 +473,10 @@
     grid-template-columns: 1fr 1fr;
     gap: 30px;
   }
-  #tv-stage .t-col{ display:flex; flex-direction:column; gap: 26px; padding-top: 4px; }
+  #tv-stage .t-col{ display:flex; flex-direction:column; justify-content:space-between; gap: 26px; padding-top: 4px; height:100%; }
+  #tv-stage .t-col .category{ flex-shrink:0; }
+  #tv-stage .t-col .category:last-child{ flex-grow:1; display:flex; flex-direction:column; }
+  #tv-stage .t-col .category:last-child .rows{ flex-grow:1; display:flex; flex-direction:column; justify-content:center; }
 
   #tv-stage .t-footer{
     position:absolute; bottom:14px; left:0; right:0;
@@ -908,6 +911,17 @@ if (__qsMatch){
   }
   scaleStage();
   window.addEventListener("resize", scaleStage);
+
+  function tryFullscreen(){
+    var el = document.documentElement;
+    var req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+    if (req){
+      try { req.call(el); } catch(e){}
+    }
+    setTimeout(scaleStage, 300);
+  }
+  document.body.addEventListener("click", tryFullscreen);
+  document.body.addEventListener("keydown", tryFullscreen);
 }
 </script>
 
