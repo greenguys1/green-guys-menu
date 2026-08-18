@@ -180,6 +180,26 @@
     color: var(--cream);
   }
   .pname .star{ color: var(--free); }
+  .pname.sold-out .pname-main{
+    text-decoration: line-through;
+    text-decoration-color: #e05a4e;
+    text-decoration-thickness: 2px;
+    opacity: 0.55;
+  }
+  .pname-soldout-tag{
+    display:inline-block;
+    margin-left: 8px;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.62em;
+    font-weight:700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #e05a4e;
+    border: 1px solid #e05a4e;
+    border-radius: 999px;
+    padding: 2px 7px;
+    vertical-align: middle;
+  }
   .pname-sub{
     display:block;
     font-weight:500;
@@ -525,7 +545,7 @@ const DEFAULT_MENU = {
           accent: "var(--c-indica)", accent2: "var(--c-indica-2)",
           headerCols: ["1","2","3","4","5g"],
           items: [
-            { thc:"14%",  name:"Snow White",       star:true, prices:[8.5,17,24,30,35] },
+            { thc:"14%",  name:"Snow White",       star:true, prices:[8.5,17,24,30,35], soldOut:true },
             { thc:"17%",  name:"Northern Lights",   prices:[12,24,36,48,60] },
             { thc:"16%",  name:"Moon Flower",       prices:[10,19,27.5,36,42.5] },
             { thc:"0.1%", name:"Black Mamba CBD", star:true, prices:[5,10,15,20,20], highlightLast:true },
@@ -634,7 +654,7 @@ function renderCategory(cat){
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td class="thc">${item.thc}</td>
-        <td class="pname">${item.name}${item.sub ? `<br><span class="pname-sub">${item.sub}</span>` : ""}</td>
+        <td class="pname${item.soldOut ? ' sold-out' : ''}"><span class="pname-main">${item.name}</span>${item.soldOut ? '<span class="pname-soldout-tag">Uitverkocht</span>' : ''}${item.sub ? `<br><span class="pname-sub">${item.sub}</span>` : ""}</td>
         <td class="price perg">${fmt(item.perGram)}<span class="unit">per gram</span></td>
       `;
       tbody.appendChild(tr);
@@ -672,7 +692,7 @@ function renderCategory(cat){
             : `<td class="price">${fmt(item.prices[4])}</td>`);
       tr.innerHTML = `
         <td class="thc">${item.thc}</td>
-        <td class="pname">${item.name}${item.star ? ' <span class="star">*</span>' : ''}${item.sub ? `<br><span class="pname-sub">${item.sub}</span>` : ""}</td>
+        <td class="pname${item.soldOut ? ' sold-out' : ''}"><span class="pname-main">${item.name}${item.star ? ' <span class="star">*</span>' : ''}</span>${item.soldOut ? '<span class="pname-soldout-tag">Uitverkocht</span>' : ''}${item.sub ? `<br><span class="pname-sub">${item.sub}</span>` : ""}</td>
         ${priceCells}${lastCell}
       `;
       tbody.appendChild(tr);
@@ -754,25 +774,25 @@ function buildItemRow(cat, item, idx){
   const row2 = document.createElement("div");
   row2.className = "row2";
   row2.innerHTML = `
-    <div><label>THC</label><input type="text" data-field="thc" value="${item.thc ?? ""}"></div>
-    <div><label>Naam</label><input type="text" data-field="name" value="${item.name ?? ""}"></div>
+    <div><label>THC</label><input type="text" data-field="thc" value="${item.thc || ""}"></div>
+    <div><label>Naam</label><input type="text" data-field="name" value="${item.name || ""}"></div>
   `;
   row.appendChild(row2);
 
   const subWrap = document.createElement("div");
-  subWrap.innerHTML = `<label>Subtekst (optioneel, onder de naam)</label><input type="text" data-field="sub" value="${item.sub ?? ""}">`;
+  subWrap.innerHTML = `<label>Subtekst (optioneel, onder de naam)</label><input type="text" data-field="sub" value="${item.sub || ""}">`;
   row.appendChild(subWrap);
 
   if (cat.perGramOnly){
     const priceWrap = document.createElement("div");
-    priceWrap.innerHTML = `<label>Prijs per gram (€)</label><input type="number" step="0.5" data-field="perGram" value="${item.perGram ?? 0}">`;
+    priceWrap.innerHTML = `<label>Prijs per gram (€)</label><input type="number" step="0.5" data-field="perGram" value="${item.perGram || 0}">`;
     row.appendChild(priceWrap);
   } else {
     const row5 = document.createElement("div");
     row5.className = "row5";
     [0,1,2,3,4].forEach(i => {
       const cell = document.createElement("div");
-      cell.innerHTML = `<label>${i+1}g</label><input type="number" step="0.5" data-price-idx="${i}" value="${item.prices?.[i] ?? 0}">`;
+      cell.innerHTML = `<label>${i+1}g</label><input type="number" step="0.5" data-price-idx="${i}" value="${(item.prices && item.prices[i]) || 0}">`;
       row5.appendChild(cell);
     });
     row.appendChild(row5);
@@ -783,6 +803,7 @@ function buildItemRow(cat, item, idx){
       <label><input type="checkbox" data-field="star" ${item.star ? "checked" : ""}> Vanaf-5-euro (*)</label>
       <label><input type="checkbox" data-field="free1g" ${item.free1g ? "checked" : ""}> +1g gratis i.p.v. 5g-prijs</label>
       <label><input type="checkbox" data-field="highlightLast" ${item.highlightLast ? "checked" : ""}> 5g-prijs uitlichten (gouden badge)</label>
+      <label><input type="checkbox" data-field="soldOut" ${item.soldOut ? "checked" : ""}> Tijdelijk uitverkocht (rode streep)</label>
     `;
     row.appendChild(flags);
   }
@@ -806,7 +827,7 @@ function buildItemRow(cat, item, idx){
       saveMenu(); renderAll();
     });
   });
-  row.querySelectorAll('[data-field="star"], [data-field="free1g"], [data-field="highlightLast"]').forEach(inp => {
+  row.querySelectorAll('[data-field="star"], [data-field="free1g"], [data-field="highlightLast"], [data-field="soldOut"]').forEach(inp => {
     inp.addEventListener("change", () => {
       item[inp.dataset.field] = inp.checked;
       saveMenu(); renderAll();
@@ -873,8 +894,12 @@ document.getElementById("reset-btn").addEventListener("click", () => {
   saveMenu(); renderAll(); buildEditForm();
 });
 
-if (new URLSearchParams(location.search).get("tv") === "1"){
+var __qsMatch = location.search.match(/[?&]tv=1(&|$)/);
+if (__qsMatch){
   document.body.classList.add("tv");
+
+  var editToggleForTV = document.getElementById("edit-toggle-btn");
+  if (editToggleForTV) editToggleForTV.style.display = "none";
 
   const stage = document.getElementById("tv-stage");
   function scaleStage(){
