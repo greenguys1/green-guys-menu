@@ -958,6 +958,82 @@ if (__qsMatch){
   document.body.addEventListener("keydown", tryFullscreen);
   document.addEventListener("fullscreenchange", () => setTimeout(fitTvContent, 200));
 }
+
+/* ---- Live koppeling met Google Sheet ("Product" / "Op" kolommen) ----
+   Haalt periodiek de gepubliceerde CSV op en zet soldOut aan/uit op
+   basis van de "Op" kolom (Ja = uitverkocht/rode streep). Matcht op
+   productnaam, hoofdletterongevoelig. ---- */
+var STOCK_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiXNFs9DmYspqXd1gZjWpb0SiHzJHiiYWAtroM9VvNtQ2_qRE2MCyU90lP47BDqHWh29bblxcNarat/pub?output=csv";
+
+function parseCSVBasic(text){
+  var lines = text.split(/\r?\n/).filter(function(l){ return l.trim().length > 0; });
+  return lines.map(function(line){
+    var result = [];
+    var cur = "";
+    var inQuotes = false;
+    for (var i = 0; i < line.length; i++){
+      var ch = line[i];
+      if (ch === '"'){
+        inQuotes = !inQuotes;
+      } else if (ch === "," && !inQuotes){
+        result.push(cur); cur = "";
+      } else {
+        cur += ch;
+      }
+    }
+    result.push(cur);
+    return result;
+  });
+}
+
+function normalizeProductName(s){
+  return (s || "").toString().trim().toLowerCase();
+}
+
+function syncSoldOutFromSheet(){
+  if (typeof fetch !== "function") return;
+  fetch(STOCK_SHEET_CSV_URL, { cache: "no-store" })
+    .then(function(res){ return res.text(); })
+    .then(function(text){
+      var rows = parseCSVBasic(text);
+      if (rows.length < 2) return;
+      var header = rows[0].map(normalizeProductName);
+      var productIdx = header.indexOf("product");
+      var opIdx = header.indexOf("op");
+      if (productIdx === -1 || opIdx === -1) return;
+
+      var statusMap = {};
+      for (var i = 1; i < rows.length; i++){
+        var row = rows[i];
+        if (!row || row.length <= Math.max(productIdx, opIdx)) continue;
+        var name = normalizeProductName(row[productIdx]);
+        var opVal = normalizeProductName(row[opIdx]);
+        if (!name) continue;
+        statusMap[name] = (opVal === "ja" || opVal === "yes" || opVal === "true" || opVal === "1");
+      }
+
+      var changed = false;
+      allCategories().forEach(function(cat){
+        cat.items.forEach(function(item){
+          var key = normalizeProductName(item.name);
+          if (Object.prototype.hasOwnProperty.call(statusMap, key)){
+            var val = statusMap[key];
+            if (item.soldOut !== val){ item.soldOut = val; changed = true; }
+          }
+        });
+      });
+
+      if (changed){
+        saveMenu();
+        renderAll();
+        if (document.body.classList.contains("editing")) buildEditForm();
+      }
+    })
+    .catch(function(err){ console.warn("Kon voorraadstatus niet ophalen van Google Sheet:", err); });
+}
+
+syncSoldOutFromSheet();
+setInterval(syncSoldOutFromSheet, 2 * 60 * 1000);
 </script>
 
 </body>
