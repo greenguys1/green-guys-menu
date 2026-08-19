@@ -472,19 +472,20 @@
     flex: 1 1 auto;
     min-height:0;
     display:flex;
-    align-items:center;
+    align-items:flex-start;
     justify-content:center;
     overflow:hidden;
+    padding: 0 30px;
   }
   #tv-stage .t-main{
-    width: min(1820px, 96vw);
+    width: 100%;
     flex-shrink:0;
     display:grid;
     grid-template-columns: 1fr 1fr;
-    gap: 44px;
+    gap: 50px;
     transform-origin: center center;
   }
-  #tv-stage .t-col{ display:flex; flex-direction:column; gap: 30px; }
+  #tv-stage .t-col{ display:flex; flex-direction:column; gap: 40px; padding-top: 22px; }
 
   #tv-stage .t-footer{
     flex-shrink:0;
@@ -925,8 +926,9 @@ if (__qsMatch){
     const naturalW = tvMain.scrollWidth;
     const naturalH = tvMain.scrollHeight;
     if (naturalW === 0 || naturalH === 0 || availW === 0 || availH === 0) return;
-    const fitScale = Math.min(availW / naturalW, availH / naturalH, 1.15);
-    tvMain.style.transform = `scale(${fitScale})`;
+    const scaleY = Math.min(availH / naturalH, 1.15);
+    tvMain.style.transformOrigin = "top center";
+    tvMain.style.transform = `scaleY(${scaleY})`;
   }
   const origRenderAllForTV = renderAll;
   renderAll = function(){
