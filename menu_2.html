@@ -472,7 +472,7 @@
     flex: 1 1 auto;
     min-height:0;
     display:flex;
-    align-items:flex-start;
+    align-items:center;
     justify-content:center;
     overflow:hidden;
     padding: 0 30px;
@@ -482,10 +482,10 @@
     flex-shrink:0;
     display:grid;
     grid-template-columns: 1fr 1fr;
-    gap: 50px;
-    transform-origin: center center;
+    gap: 3.125em;
+    font-size: 16px;
   }
-  #tv-stage .t-col{ display:flex; flex-direction:column; gap: 40px; padding-top: 22px; }
+  #tv-stage .t-col{ display:flex; flex-direction:column; gap: 2.5em; padding-top: 1.375em; }
 
   #tv-stage .t-footer{
     flex-shrink:0;
@@ -496,16 +496,16 @@
   }
 
   #tv-stage .category{ margin-top:0; }
-  #tv-stage .ribbon{ font-size:26px; padding:13px 38px; }
-  #tv-stage .ribbon::after{ font-size:12px; margin-top:3px; }
-  #tv-stage .rows{ padding: 10px 20px 15px; }
-  #tv-stage .price-table thead th{ font-size:15px; padding:10px 6px 11px; }
-  #tv-stage .price-table tbody td{ padding:14px 5px; }
-  #tv-stage .thc{ font-size:16px; }
-  #tv-stage .pname{ font-size:21px; }
-  #tv-stage .price{ font-size:18px; }
-  #tv-stage .badge-free{ font-size:15px; padding: 6px 13px; }
-  #tv-stage .badge-highlight{ font-size:18px; padding: 7px 15px; }
+  #tv-stage .ribbon{ font-size:1.625em; padding:0.8125em 2.375em; }
+  #tv-stage .ribbon::after{ font-size:0.75em; margin-top:0.1875em; }
+  #tv-stage .rows{ padding: 0.625em 1.25em 0.9375em; }
+  #tv-stage .price-table thead th{ font-size:0.9375em; padding:0.625em 0.375em 0.6875em; }
+  #tv-stage .price-table tbody td{ padding:0.875em 0.3125em; }
+  #tv-stage .thc{ font-size:1em; }
+  #tv-stage .pname{ font-size:1.3125em; }
+  #tv-stage .price{ font-size:1.125em; }
+  #tv-stage .badge-free{ font-size:0.9375em; padding: 0.375em 0.8125em; }
+  #tv-stage .badge-highlight{ font-size:1.125em; padding: 0.4375em 0.9375em; }
 </style>
 </head>
 <body>
@@ -919,16 +919,17 @@ if (__qsMatch){
   const tvMain = document.getElementById("tv-menu-root");
   function fitTvContent(){
     if (!tvMain) return;
-    tvMain.style.transform = "none";
     const wrap = tvMain.parentElement;
-    const availW = wrap.clientWidth;
     const availH = wrap.clientHeight;
-    const naturalW = tvMain.scrollWidth;
-    const naturalH = tvMain.scrollHeight;
-    if (naturalW === 0 || naturalH === 0 || availW === 0 || availH === 0) return;
-    const scaleY = Math.min(availH / naturalH, 1.15);
-    tvMain.style.transformOrigin = "top center";
-    tvMain.style.transform = `scaleY(${scaleY})`;
+    if (availH === 0) return;
+    let lo = 8, hi = 30, best = lo;
+    for (let i = 0; i < 10; i++){
+      const mid = (lo + hi) / 2;
+      tvMain.style.fontSize = mid + "px";
+      const h = tvMain.scrollHeight;
+      if (h <= availH){ best = mid; lo = mid; } else { hi = mid; }
+    }
+    tvMain.style.fontSize = best + "px";
   }
   const origRenderAllForTV = renderAll;
   renderAll = function(){
