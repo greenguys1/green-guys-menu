@@ -930,7 +930,7 @@ if (__qsMatch){
   function fitTvContent(){
     if (!tvMain) return;
     const wrap = tvMain.parentElement;
-    const availH = wrap.clientHeight * 0.97;
+    const availH = wrap.clientHeight * 0.94;
     if (availH === 0) return;
     let lo = 8, hi = 30, best = lo;
     for (let i = 0; i < 12; i++){
@@ -964,6 +964,9 @@ if (__qsMatch){
   });
   window.addEventListener("resize", fitTvContent);
   window.addEventListener("orientationchange", () => setTimeout(fitTvContent, 200));
+  /* Permanente doorlopende bewaking: corrigeert zichzelf continu, ongeacht
+     trage netwerken, lettertype-laadtijd, of Google Sheet-sync-timing. */
+  setInterval(fitTvContent, 2000);
 
   function tryFullscreen(){
     var el = document.documentElement;
