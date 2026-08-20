@@ -154,7 +154,7 @@
   }
   .price-table thead th.th-thc,
   .price-table thead th.th-name{ text-align:left; }
-  .price-table thead th.th-gram-last{ text-align:right; padding-right: 10px; }
+  .price-table thead th.th-gram-last{ text-align:center; }
 
   .price-table tbody td{
     padding: 15px 4px;
@@ -215,7 +215,7 @@
     font-size: clamp(13px,1.15vw,15.5px);
     color: var(--cream);
   }
-  .price:last-child{ text-align:right; padding-right: 10px !important; color: var(--gold); }
+  .price:last-child{ text-align:center; color: var(--gold); }
   .badge-free, .badge-highlight{
     display:inline-block;
     font-weight:800;
@@ -402,8 +402,23 @@
     display:flex; align-items:center; gap:5px;
     text-transform:none; letter-spacing:0; font-size:11.5px;
   }
+  .edit-item .item-actions{
+    display:flex; gap:6px; align-items:center;
+    margin-top: 4px;
+  }
+  .edit-item .move-item{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    color: var(--cream);
+    font-size: 11px;
+    font-weight:600;
+    padding: 5px 9px;
+    border-radius: 6px;
+    cursor:pointer;
+  }
+  .edit-item .move-item:hover:not(:disabled){ border-color: var(--mint-bright); }
+  .edit-item .move-item:disabled{ opacity:0.35; cursor:default; }
   .edit-item .remove-item{
-    align-self:flex-end;
     background: none;
     border: 1px solid rgba(255,140,120,0.4);
     color: #ff9a8a;
@@ -411,7 +426,7 @@
     padding: 5px 9px;
     border-radius: 6px;
     cursor:pointer;
-    margin-top: 4px;
+    margin-left: auto;
     width: fit-content;
   }
   .add-item-btn{
@@ -503,7 +518,7 @@
   }
 
   #tv-stage .category{ margin-top:0; }
-  #tv-stage .ribbon-wrap{ margin-top: -1.0em; }
+  #tv-stage .ribbon-wrap{ margin-top: -0.8em; }
   #tv-stage .ribbon{ font-size:1.75em; padding:0.55em 2.4em; }
   #tv-stage .ribbon::after{ font-size:0.8em; margin-top:0.2em; }
   #tv-stage .rows{ padding: 0.45em 1.3em 0.6em; }
@@ -857,6 +872,35 @@ function buildItemRow(cat, item, idx){
     });
   });
 
+  const actionRow = document.createElement("div");
+  actionRow.className = "item-actions";
+
+  const moveUpBtn = document.createElement("button");
+  moveUpBtn.className = "move-item";
+  moveUpBtn.textContent = "▲ Omhoog";
+  moveUpBtn.disabled = (idx === 0);
+  moveUpBtn.addEventListener("click", () => {
+    if (idx === 0) return;
+    const tmp = cat.items[idx - 1];
+    cat.items[idx - 1] = cat.items[idx];
+    cat.items[idx] = tmp;
+    saveMenu(); renderAll(); buildEditForm();
+  });
+  actionRow.appendChild(moveUpBtn);
+
+  const moveDownBtn = document.createElement("button");
+  moveDownBtn.className = "move-item";
+  moveDownBtn.textContent = "▼ Omlaag";
+  moveDownBtn.disabled = (idx === cat.items.length - 1);
+  moveDownBtn.addEventListener("click", () => {
+    if (idx === cat.items.length - 1) return;
+    const tmp = cat.items[idx + 1];
+    cat.items[idx + 1] = cat.items[idx];
+    cat.items[idx] = tmp;
+    saveMenu(); renderAll(); buildEditForm();
+  });
+  actionRow.appendChild(moveDownBtn);
+
   const removeBtn = document.createElement("button");
   removeBtn.className = "remove-item";
   removeBtn.textContent = "✕ Product verwijderen";
@@ -864,7 +908,9 @@ function buildItemRow(cat, item, idx){
     cat.items.splice(idx, 1);
     saveMenu(); renderAll(); buildEditForm();
   });
-  row.appendChild(removeBtn);
+  actionRow.appendChild(removeBtn);
+
+  row.appendChild(actionRow);
 
   return row;
 }
