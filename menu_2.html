@@ -486,11 +486,11 @@
     display:block;
     flex: 1 1 0;
     min-width:0;
-    padding-top: 3em;
+    padding-top: 1.8em;
   }
   #tv-stage .t-col:first-child{ margin-right: 1.5625em; }
   #tv-stage .t-col:last-child{ margin-left: 1.5625em; }
-  #tv-stage .t-col .category{ margin-bottom: 3.5em; }
+  #tv-stage .t-col .category{ margin-bottom: 2em; }
   #tv-stage .t-col .category:last-child{ margin-bottom: 0; }
 
   #tv-stage .t-footer{
@@ -504,7 +504,6 @@
 
   #tv-stage .category{ margin-top:0; }
   #tv-stage .ribbon-wrap{ margin-top: -1.3em; }
-  #tv-stage .t-col .category{ margin-bottom: 3.5em; }
   #tv-stage .ribbon{ font-size:1.75em; padding:0.85em 2.4em; }
   #tv-stage .ribbon::after{ font-size:0.8em; margin-top:0.2em; }
   #tv-stage .rows{ padding: 0.7em 1.3em 1em; }
@@ -944,10 +943,10 @@ if (__qsMatch){
   function fitTvContent(){
     if (!tvMain) return;
     const zones = layoutTvZones();
-    const availH = zones.availH * 0.94;
+    const availH = zones.availH * 0.97;
     if (availH <= 0) return;
     const cols = tvMain.children;
-    let lo = 8, hi = 30, best = lo;
+    let lo = 5, hi = 30, best = lo;
     for (let i = 0; i < 14; i++){
       const mid = (lo + hi) / 2;
       tvMain.style.fontSize = mid + "px";
