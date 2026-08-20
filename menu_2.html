@@ -470,7 +470,7 @@
   #tv-stage .t-main-wrap{
     position:absolute; left:0; right:0;
     display:flex;
-    align-items:center;
+    align-items:flex-start;
     justify-content:center;
     overflow:hidden;
     padding: 0 30px;
@@ -486,7 +486,7 @@
     display:block;
     flex: 1 1 0;
     min-width:0;
-    padding-top: 1.375em;
+    padding-top: 3em;
   }
   #tv-stage .t-col:first-child{ margin-right: 1.5625em; }
   #tv-stage .t-col:last-child{ margin-left: 1.5625em; }
@@ -946,12 +946,16 @@ if (__qsMatch){
     const zones = layoutTvZones();
     const availH = zones.availH * 0.94;
     if (availH <= 0) return;
+    const cols = tvMain.children;
     let lo = 8, hi = 30, best = lo;
-    for (let i = 0; i < 12; i++){
+    for (let i = 0; i < 14; i++){
       const mid = (lo + hi) / 2;
       tvMain.style.fontSize = mid + "px";
-      const h = tvMain.scrollHeight;
-      if (h <= availH){ best = mid; lo = mid; } else { hi = mid; }
+      let maxColH = 0;
+      for (let c = 0; c < cols.length; c++){
+        if (cols[c].scrollHeight > maxColH) maxColH = cols[c].scrollHeight;
+      }
+      if (maxColH <= availH){ best = mid; lo = mid; } else { hi = mid; }
     }
     tvMain.style.fontSize = best + "px";
     layoutTvZones();
