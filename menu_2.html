@@ -959,6 +959,28 @@ if (__qsMatch){
     }
     tvMain.style.fontSize = best + "px";
     layoutTvZones();
+    updateTvDebug(zones, best, cols);
+  }
+
+  var tvDebugEl = null;
+  function updateTvDebug(zones, fontSize, cols){
+    if (!tvDebugEl){
+      tvDebugEl = document.createElement("div");
+      tvDebugEl.style.cssText = "position:fixed;bottom:4px;right:6px;z-index:99999;font-family:monospace;font-size:11px;color:#7fd88f;background:rgba(0,0,0,0.55);padding:3px 7px;border-radius:5px;line-height:1.5;pointer-events:none;white-space:pre;";
+      document.body.appendChild(tvDebugEl);
+    }
+    var maxColH = 0;
+    var colHeights = [];
+    for (var c = 0; c < cols.length; c++){
+      colHeights.push(Math.round(cols[c].scrollHeight));
+      if (cols[c].scrollHeight > maxColH) maxColH = cols[c].scrollHeight;
+    }
+    tvDebugEl.textContent =
+      "win: " + window.innerWidth + "x" + window.innerHeight +
+      " | header:" + Math.round(zones.top) + " footer-avail:" + Math.round(zones.availH) +
+      " | cols:" + colHeights.join(",") +
+      " | font:" + fontSize + "px" +
+      " | dpr:" + (window.devicePixelRatio || 1);
   }
   const origRenderAllForTV = renderAll;
   renderAll = function(){
