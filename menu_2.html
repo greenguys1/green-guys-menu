@@ -448,15 +448,14 @@
     height: 100vh;
     position:fixed;
     top:0; left:0;
-    flex-direction:column;
     background: radial-gradient(120% 140% at 12% -10%, var(--bg-1) 0%, var(--bg-0) 55%, #06120f 100%);
   }
   body.tv{ overflow:hidden; }
-  body.tv #tv-stage{ display:flex; }
+  body.tv #tv-stage{ display:block; }
   body.tv > header, body.tv > main, body.tv > footer{ display:none; }
 
   #tv-stage .t-header{
-    flex-shrink:0;
+    position:absolute; top:0; left:0; right:0;
     text-align:center;
     padding: clamp(10px,1.6vh,22px) 20px clamp(6px,1vh,12px);
   }
@@ -469,8 +468,7 @@
   }
 
   #tv-stage .t-main-wrap{
-    flex: 1 1 auto;
-    min-height:0;
+    position:absolute; left:0; right:0;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -496,11 +494,12 @@
   #tv-stage .t-col .category:last-child{ margin-bottom: 0; }
 
   #tv-stage .t-footer{
-    flex-shrink:0;
+    position:absolute; left:0; right:0; bottom:0;
     padding: clamp(6px,1vh,12px) 20px;
     text-align:center;
     font-family:'JetBrains Mono', monospace;
-    font-size: 14px; letter-spacing:1.5px; color: var(--gold);
+    font-size: 13px; letter-spacing:1.2px; color: var(--gold);
+    opacity: 0.85;
   }
 
   #tv-stage .category{ margin-top:0; }
@@ -927,11 +926,26 @@ if (__qsMatch){
   if (editToggleForTV) editToggleForTV.style.display = "none";
 
   const tvMain = document.getElementById("tv-menu-root");
+  const tvHeader = document.querySelector("#tv-stage .t-header");
+  const tvFooter = document.querySelector("#tv-stage .t-footer");
+  const tvMainWrap = document.querySelector("#tv-stage .t-main-wrap");
+
+  function layoutTvZones(){
+    if (!tvHeader || !tvFooter || !tvMainWrap) return { top: 0, availH: window.innerHeight };
+    const headerH = tvHeader.offsetHeight;
+    const footerH = tvFooter.offsetHeight;
+    const top = headerH;
+    const availH = Math.max(window.innerHeight - headerH - footerH, 50);
+    tvMainWrap.style.top = top + "px";
+    tvMainWrap.style.height = availH + "px";
+    return { top: top, availH: availH };
+  }
+
   function fitTvContent(){
     if (!tvMain) return;
-    const wrap = tvMain.parentElement;
-    const availH = wrap.clientHeight * 0.94;
-    if (availH === 0) return;
+    const zones = layoutTvZones();
+    const availH = zones.availH * 0.94;
+    if (availH <= 0) return;
     let lo = 8, hi = 30, best = lo;
     for (let i = 0; i < 12; i++){
       const mid = (lo + hi) / 2;
@@ -940,6 +954,7 @@ if (__qsMatch){
       if (h <= availH){ best = mid; lo = mid; } else { hi = mid; }
     }
     tvMain.style.fontSize = best + "px";
+    layoutTvZones();
   }
   const origRenderAllForTV = renderAll;
   renderAll = function(){
