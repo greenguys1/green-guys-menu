@@ -86,7 +86,7 @@
     background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
     border: 1px solid var(--line);
     border-top: none;
-    border-radius: 4px 4px 16px 16px;
+    border-radius: 14px;
     overflow:visible;
     box-shadow: 0 16px 34px var(--shadow);
     margin-top: 22px;
@@ -486,11 +486,11 @@
     display:block;
     flex: 1 1 0;
     min-width:0;
-    padding-top: 1.8em;
+    padding-top: 1.5em;
   }
   #tv-stage .t-col:first-child{ margin-right: 1.5625em; }
   #tv-stage .t-col:last-child{ margin-left: 1.5625em; }
-  #tv-stage .t-col .category{ margin-bottom: 2em; }
+  #tv-stage .t-col .category{ margin-bottom: 1.4em; }
   #tv-stage .t-col .category:last-child{ margin-bottom: 0; }
 
   #tv-stage .t-footer{
@@ -504,11 +504,11 @@
 
   #tv-stage .category{ margin-top:0; }
   #tv-stage .ribbon-wrap{ margin-top: -1.3em; }
-  #tv-stage .ribbon{ font-size:1.75em; padding:0.85em 2.4em; }
+  #tv-stage .ribbon{ font-size:1.75em; padding:0.55em 2.4em; }
   #tv-stage .ribbon::after{ font-size:0.8em; margin-top:0.2em; }
-  #tv-stage .rows{ padding: 0.7em 1.3em 1em; }
-  #tv-stage .price-table thead th{ font-size:1em; padding:0.65em 0.4em 0.75em; }
-  #tv-stage .price-table tbody td{ padding:0.95em 0.3125em; }
+  #tv-stage .rows{ padding: 0.45em 1.3em 0.6em; }
+  #tv-stage .price-table thead th{ font-size:1em; padding:0.45em 0.4em 0.5em; }
+  #tv-stage .price-table tbody td{ padding:0.6em 0.3125em; }
   #tv-stage .thc{ font-size:1.0625em; }
   #tv-stage .pname{ font-size:1.4375em; }
   #tv-stage .price{ font-size:1.25em; }
@@ -946,7 +946,7 @@ if (__qsMatch){
     const availH = zones.availH * 0.97;
     if (availH <= 0) return;
     const cols = tvMain.children;
-    let lo = 5, hi = 30, best = lo;
+    let lo = 5, hi = 42, best = lo;
     for (let i = 0; i < 14; i++){
       const mid = (lo + hi) / 2;
       tvMain.style.fontSize = mid + "px";
@@ -958,7 +958,6 @@ if (__qsMatch){
     }
     tvMain.style.fontSize = best + "px";
     layoutTvZones();
-    updateTvDebug(zones, best, cols, "init");
 
     /* Verificatie na een ECHTE herteken-cyclus: sommige (kiosk-)browsers
        geven tijdens de snelle meet-lus verouderde hoogtes terug. Na een
@@ -992,28 +991,6 @@ if (__qsMatch){
       h = measure();
       guard++;
     }
-    updateTvDebug(zones, current, cols, "corrected");
-  }
-
-  var tvDebugEl = null;
-  function updateTvDebug(zones, fontSize, cols, phase){
-    if (!tvDebugEl){
-      tvDebugEl = document.createElement("div");
-      tvDebugEl.style.cssText = "position:fixed;bottom:4px;right:6px;z-index:99999;font-family:monospace;font-size:11px;color:#7fd88f;background:rgba(0,0,0,0.55);padding:3px 7px;border-radius:5px;line-height:1.5;pointer-events:none;white-space:pre;";
-      document.body.appendChild(tvDebugEl);
-    }
-    var maxColH = 0;
-    var colHeights = [];
-    for (var c = 0; c < cols.length; c++){
-      colHeights.push(Math.round(cols[c].scrollHeight));
-      if (cols[c].scrollHeight > maxColH) maxColH = cols[c].scrollHeight;
-    }
-    tvDebugEl.textContent =
-      "[" + (phase || "init") + "] win: " + window.innerWidth + "x" + window.innerHeight +
-      " | header:" + Math.round(zones.top) + " footer-avail:" + Math.round(zones.availH) +
-      " | cols:" + colHeights.join(",") +
-      " | font:" + fontSize + "px" +
-      " | dpr:" + (window.devicePixelRatio || 1);
   }
   const origRenderAllForTV = renderAll;
   renderAll = function(){
