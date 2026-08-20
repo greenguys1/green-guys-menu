@@ -78,7 +78,7 @@
     main{ grid-template-columns: 1fr; }
   }
 
-  .col{ display:flex; flex-direction:column; gap: clamp(26px,3vw,38px); }
+  .col{ display:flex; flex-direction:column; gap: clamp(26px,3vw,38px); padding-top: 22px; }
 
   .category{
     --accent: var(--mint);
@@ -501,7 +501,7 @@
     display:block;
     flex: 1 1 0;
     min-width:0;
-    padding-top: 1.5em;
+    padding-top: 1.8em;
   }
   #tv-stage .t-col:first-child{ margin-right: 1.5625em; }
   #tv-stage .t-col:last-child{ margin-left: 1.5625em; }
@@ -518,7 +518,7 @@
   }
 
   #tv-stage .category{ margin-top:0; }
-  #tv-stage .ribbon-wrap{ margin-top: -0.8em; }
+  #tv-stage .ribbon-wrap{ margin-top: -1.3em; }
   #tv-stage .ribbon{ font-size:1.75em; padding:0.55em 2.4em; }
   #tv-stage .ribbon::after{ font-size:0.8em; margin-top:0.2em; }
   #tv-stage .rows{ padding: 0.45em 1.3em 0.6em; }
@@ -583,10 +583,10 @@ const DEFAULT_MENU = {
           accent: "var(--c-indica)", accent2: "var(--c-indica-2)",
           headerCols: ["1","2","3","4","5g"],
           items: [
-            { thc:"14%",  name:"Snow White",       star:true, prices:[8.5,17,24,30,35] },
-            { thc:"16%",  name:"Moon Flower",       prices:[10,19,27.5,36,42.5] },
             { thc:"0.1%", name:"Black Mamba CBD", star:true, prices:[5,10,15,20,20], highlightLast:true },
             { thc:"14%",  name:"Gruis / Gemalen",  star:true, prices:[6,12,18,24,24], highlightLast:true },
+            { thc:"14%",  name:"Snow White",       star:true, prices:[8.5,17,24,30,35] },
+            { thc:"16%",  name:"Moon Flower",       prices:[10,19,27.5,36,42.5] },
           ]
         },
         {
