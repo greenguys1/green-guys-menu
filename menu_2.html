@@ -208,6 +208,15 @@
     color: var(--muted);
     margin-top: 1px;
   }
+  .strength-dots{
+    display:inline-block;
+    margin-left: 8px;
+    font-size: 0.6em;
+    letter-spacing: 2px;
+    color: var(--gold);
+    vertical-align: middle;
+  }
+  #tv-stage .strength-dots{ font-size: 0.55em; letter-spacing: 2.5px; }
   .price{
     text-align:center;
     font-family:'JetBrains Mono', monospace;
@@ -382,7 +391,7 @@
     display:block;
     margin-bottom: 2px;
   }
-  .edit-item input[type="text"], .edit-item input[type="number"]{
+  .edit-item input[type="text"], .edit-item input[type="number"], .edit-item select{
     width:100%;
     background: var(--bg-1);
     border: 1px solid var(--line);
@@ -597,7 +606,6 @@ const DEFAULT_MENU = {
             { thc:"18%", name:"Amnesia / Silver", star:true, prices:[10,19,27.5,36,42.5] },
             { thc:"20%", name:"Lemon Haze",         prices:[12,24,32,42.5,50] },
             { thc:"23%", name:"Crystal Haze",       prices:[15,28,40,50,55] },
-            { thc:"21%", name:"G13",                prices:[11,22,30,40,45] },
           ]
         }
       ]
@@ -653,6 +661,17 @@ function fmt(n){
   return Number.isInteger(n) ? n.toString() : n.toFixed(1).replace(/\.0$/,"");
 }
 
+var STRENGTH_LABELS = ["", "Licht", "Gemiddeld", "Sterk", "Extreem"];
+function strengthDotsHtml(item){
+  if (!item.strength || item.strength < 1 || item.strength > 4) return "";
+  let dots = "";
+  for (let i = 1; i <= 4; i++){
+    dots += i <= item.strength ? "\u25CF" : "\u25CB";
+  }
+  const label = STRENGTH_LABELS[item.strength] || "";
+  return `<span class="strength-dots" title="Sterkte: ${label}">${dots}</span>`;
+}
+
 function renderCategory(cat){
   const el = document.createElement("div");
   el.className = "category";
@@ -692,7 +711,7 @@ function renderCategory(cat){
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td class="thc">${item.thc}</td>
-        <td class="pname${item.soldOut ? ' sold-out' : ''}"><span class="pname-main">${item.name}</span>${item.soldOut ? '<span class="pname-soldout-tag">Uitverkocht</span>' : ''}${item.sub ? `<br><span class="pname-sub">${item.sub}</span>` : ""}</td>
+        <td class="pname${item.soldOut ? ' sold-out' : ''}"><span class="pname-main">${item.name}</span>${item.soldOut ? '<span class="pname-soldout-tag">Uitverkocht</span>' : ''}${item.sub ? `<br><span class="pname-sub">${item.sub}</span>` : ""}${strengthDotsHtml(item)}</td>
         <td class="price perg">${fmt(item.perGram)}<span class="unit">per gram</span></td>
       `;
       tbody.appendChild(tr);
@@ -730,7 +749,7 @@ function renderCategory(cat){
             : `<td class="price">${fmt(item.prices[4])}</td>`);
       tr.innerHTML = `
         <td class="thc">${item.thc}</td>
-        <td class="pname${item.soldOut ? ' sold-out' : ''}"><span class="pname-main">${item.name}${item.star ? ' <span class="star">*</span>' : ''}</span>${item.soldOut ? '<span class="pname-soldout-tag">Uitverkocht</span>' : ''}${item.sub ? `<br><span class="pname-sub">${item.sub}</span>` : ""}</td>
+        <td class="pname${item.soldOut ? ' sold-out' : ''}"><span class="pname-main">${item.name}${item.star ? ' <span class="star">*</span>' : ''}</span>${item.soldOut ? '<span class="pname-soldout-tag">Uitverkocht</span>' : ''}${item.sub ? `<br><span class="pname-sub">${item.sub}</span>` : ""}${strengthDotsHtml(item)}</td>
         ${priceCells}${lastCell}
       `;
       tbody.appendChild(tr);
@@ -844,6 +863,19 @@ function buildItemRow(cat, item, idx){
       <label><input type="checkbox" data-field="soldOut" ${item.soldOut ? "checked" : ""}> Tijdelijk uitverkocht (rode streep)</label>
     `;
     row.appendChild(flags);
+
+    const strengthWrap = document.createElement("div");
+    strengthWrap.innerHTML = `
+      <label>Sterkte (bolletjes)</label>
+      <select data-field="strength">
+        <option value="0" ${!item.strength ? "selected" : ""}>Geen indicatie</option>
+        <option value="1" ${item.strength === 1 ? "selected" : ""}>\u25CF\u25CB\u25CB\u25CB Licht</option>
+        <option value="2" ${item.strength === 2 ? "selected" : ""}>\u25CF\u25CF\u25CB\u25CB Gemiddeld</option>
+        <option value="3" ${item.strength === 3 ? "selected" : ""}>\u25CF\u25CF\u25CF\u25CB Sterk</option>
+        <option value="4" ${item.strength === 4 ? "selected" : ""}>\u25CF\u25CF\u25CF\u25CF Extreem</option>
+      </select>
+    `;
+    row.appendChild(strengthWrap);
   }
 
   row.querySelectorAll('[data-field="thc"], [data-field="name"], [data-field="sub"]').forEach(inp => {
@@ -868,6 +900,13 @@ function buildItemRow(cat, item, idx){
   row.querySelectorAll('[data-field="star"], [data-field="free1g"], [data-field="highlightLast"], [data-field="soldOut"]').forEach(inp => {
     inp.addEventListener("change", () => {
       item[inp.dataset.field] = inp.checked;
+      saveMenu(); renderAll();
+    });
+  });
+  row.querySelectorAll('[data-field="strength"]').forEach(inp => {
+    inp.addEventListener("change", () => {
+      const v = parseInt(inp.value);
+      item.strength = v > 0 ? v : undefined;
       saveMenu(); renderAll();
     });
   });
@@ -1078,11 +1117,22 @@ if (__qsMatch){
   document.addEventListener("fullscreenchange", () => setTimeout(fitTvContent, 200));
 }
 
-/* ---- Live koppeling met Google Sheet ("Product" / "Op" kolommen) ----
-   Haalt periodiek de gepubliceerde CSV op en zet soldOut aan/uit op
-   basis van de "Op" kolom (Ja = uitverkocht/rode streep). Matcht op
-   productnaam, hoofdletterongevoelig. ---- */
+/* ---- Live koppeling met Google Sheet ("Naam"/"Sterkte"/"Op" kolommen) ----
+   Haalt periodiek de gepubliceerde CSV op en zet zowel soldOut (rode
+   streep bij Op=Ja) als sterkte (bolletjes-indicator) op basis van de
+   sheet. Matcht op productnaam, hoofdletterongevoelig, met een alias-
+   tabel voor de gevallen waar de sheet-naam net iets anders is
+   geschreven dan de menu-naam. ---- */
 var STOCK_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiXNFs9DmYspqXd1gZjWpb0SiHzJHiiYWAtroM9VvNtQ2_qRE2MCyU90lP47BDqHWh29bblxcNarat/pub?output=csv";
+
+/* menu-naam (hoofdletterongevoelig) -> sheet-naam (hoofdletterongevoelig) */
+var STOCK_SHEET_NAME_ALIASES = {
+  "black mamba cbd": "black mamba",
+  "gruis / gemalen": "gruis",
+  "amnesia / silver": "amnesia",
+  "bluecheesecake": "blue cheesecake",
+  "california specials": "cali special wegen"
+};
 
 function parseCSVBasic(text){
   var lines = text.split(/\r?\n/).filter(function(l){ return l.trim().length > 0; });
@@ -1109,6 +1159,9 @@ function normalizeProductName(s){
   return (s || "").toString().trim().toLowerCase();
 }
 
+/* Sterkte-tekst (Licht/Gemiddeld/Sterk/Extreem) -> aantal gevulde bolletjes (van 4) */
+var STRENGTH_LEVELS = { "licht": 1, "gemiddeld": 2, "sterk": 3, "extreem": 4 };
+
 function syncSoldOutFromSheet(){
   if (typeof fetch !== "function") return;
   fetch(STOCK_SHEET_CSV_URL, { cache: "no-store" })
@@ -1117,27 +1170,47 @@ function syncSoldOutFromSheet(){
       var rows = parseCSVBasic(text);
       if (rows.length < 2) return;
       var header = rows[0].map(normalizeProductName);
-      var productIdx = header.indexOf("product");
+      var nameIdx = header.indexOf("naam");
       var opIdx = header.indexOf("op");
-      if (productIdx === -1 || opIdx === -1) return;
+      var sterkteIdx = header.indexOf("sterkte");
+      if (nameIdx === -1 || opIdx === -1) return;
 
       var statusMap = {};
+      var strengthMap = {};
       for (var i = 1; i < rows.length; i++){
         var row = rows[i];
-        if (!row || row.length <= Math.max(productIdx, opIdx)) continue;
-        var name = normalizeProductName(row[productIdx]);
-        var opVal = normalizeProductName(row[opIdx]);
+        if (!row || row.length <= nameIdx) continue;
+        var name = normalizeProductName(row[nameIdx]);
         if (!name) continue;
+        var opVal = normalizeProductName(row[opIdx]);
         statusMap[name] = (opVal === "ja" || opVal === "yes" || opVal === "true" || opVal === "1");
+        if (sterkteIdx !== -1 && row.length > sterkteIdx){
+          var sterkteVal = normalizeProductName(row[sterkteIdx]);
+          if (Object.prototype.hasOwnProperty.call(STRENGTH_LEVELS, sterkteVal)){
+            strengthMap[name] = STRENGTH_LEVELS[sterkteVal];
+          }
+        }
+      }
+
+      function lookupKey(menuName){
+        var key = normalizeProductName(menuName);
+        if (Object.prototype.hasOwnProperty.call(STOCK_SHEET_NAME_ALIASES, key)){
+          return STOCK_SHEET_NAME_ALIASES[key];
+        }
+        return key;
       }
 
       var changed = false;
       allCategories().forEach(function(cat){
         cat.items.forEach(function(item){
-          var key = normalizeProductName(item.name);
+          var key = lookupKey(item.name);
           if (Object.prototype.hasOwnProperty.call(statusMap, key)){
             var val = statusMap[key];
             if (item.soldOut !== val){ item.soldOut = val; changed = true; }
+          }
+          if (Object.prototype.hasOwnProperty.call(strengthMap, key)){
+            var sVal = strengthMap[key];
+            if (item.strength !== sVal){ item.strength = sVal; changed = true; }
           }
         });
       });
