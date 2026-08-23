@@ -155,6 +155,11 @@
   .price-table thead th.th-thc,
   .price-table thead th.th-name{ text-align:left; }
   .price-table thead th.th-gram-last{ text-align:center; }
+  .th-strength-label{
+    margin-left: 0.5em;
+    font-weight: 500;
+    opacity: 0.75;
+  }
 
   .price-table tbody td{
     padding: 15px 4px;
@@ -699,7 +704,7 @@ function renderCategory(cat){
       </colgroup>
       <thead>
         <tr>
-          <th class="th-thc">THC</th>
+          <th class="th-thc">THC <span class="th-strength-label">Sterkte</span></th>
           <th class="th-name"></th>
           <th class="th-gram-last">Prijs</th>
         </tr>
@@ -710,8 +715,8 @@ function renderCategory(cat){
     cat.items.forEach(item => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td class="thc">${item.thc}</td>
-        <td class="pname${item.soldOut ? ' sold-out' : ''}"><span class="pname-main">${item.name}</span>${item.soldOut ? '<span class="pname-soldout-tag">Uitverkocht</span>' : ''}${item.sub ? `<br><span class="pname-sub">${item.sub}</span>` : ""}${strengthDotsHtml(item)}</td>
+        <td class="thc">${item.thc}${strengthDotsHtml(item)}</td>
+        <td class="pname${item.soldOut ? ' sold-out' : ''}"><span class="pname-main">${item.name}</span>${item.soldOut ? '<span class="pname-soldout-tag">Uitverkocht</span>' : ''}${item.sub ? `<br><span class="pname-sub">${item.sub}</span>` : ""}</td>
         <td class="price perg">${fmt(item.perGram)}<span class="unit">per gram</span></td>
       `;
       tbody.appendChild(tr);
@@ -728,7 +733,7 @@ function renderCategory(cat){
       </colgroup>
       <thead>
         <tr>
-          <th class="th-thc">THC</th>
+          <th class="th-thc">THC <span class="th-strength-label">Sterkte</span></th>
           <th class="th-name"></th>
           ${gramHeads}
           <th class="th-gram-last">${cat.headerCols[4]}</th>
@@ -748,8 +753,8 @@ function renderCategory(cat){
             ? `<td class="price"><span class="badge-highlight">${fmt(item.prices[4])}</span></td>`
             : `<td class="price">${fmt(item.prices[4])}</td>`);
       tr.innerHTML = `
-        <td class="thc">${item.thc}</td>
-        <td class="pname${item.soldOut ? ' sold-out' : ''}"><span class="pname-main">${item.name}${item.star ? ' <span class="star">*</span>' : ''}</span>${item.soldOut ? '<span class="pname-soldout-tag">Uitverkocht</span>' : ''}${item.sub ? `<br><span class="pname-sub">${item.sub}</span>` : ""}${strengthDotsHtml(item)}</td>
+        <td class="thc">${item.thc}${strengthDotsHtml(item)}</td>
+        <td class="pname${item.soldOut ? ' sold-out' : ''}"><span class="pname-main">${item.name}${item.star ? ' <span class="star">*</span>' : ''}</span>${item.soldOut ? '<span class="pname-soldout-tag">Uitverkocht</span>' : ''}${item.sub ? `<br><span class="pname-sub">${item.sub}</span>` : ""}</td>
         ${priceCells}${lastCell}
       `;
       tbody.appendChild(tr);
