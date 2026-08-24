@@ -608,11 +608,11 @@
   #tv-stage .price-table thead th{ font-size:1.05em; padding:0.25em 0.4em 0.3em; }
   #tv-stage .price-table tbody td{ padding:0.32em 0.3125em; }
   #tv-stage .row-divider td{ padding: 0.22em 0 !important; }
-  #tv-stage .thc{ font-size:1.3em; }
-  #tv-stage .pname{ font-size:1.75em; }
-  #tv-stage .price{ font-size:1.55em; }
+  #tv-stage .thc{ font-size:1.5em; }
+  #tv-stage .pname{ font-size:1.95em; }
+  #tv-stage .price{ font-size:1.75em; }
   #tv-stage .badge-free{ font-size:1.3em; padding: 0.4em 0.85em; }
-  #tv-stage .badge-highlight{ font-size:1.55em; padding: 0.4em 0.9em; }
+  #tv-stage .badge-highlight{ font-size:1.5em; padding: 0.35em 0.7em; }
 
 
   /* Nieuwe elementen (Others-combo, spanning-prijzen) ook mee laten
@@ -693,9 +693,7 @@ const DEFAULT_MENU = {
             { thc:"", name:"Hash Indica", prices:[3.5,10.5,12,30], strength:1 },
             { thc:"", name:"Hash Sativa", prices:[4.75,12.5,16.75,40], strength:2 },
             { thc:"", name:"Indica", divider:true, prices:[3.5,10.5,12,30], strength:1 },
-            { thc:"", name:"Sativa", prices:[4.75,12.5,16.75,40], strength:2 },
-            { thc:"", name:"Hybrid", prices:[4.75,12.5,16.75,40], strength:2 },
-            { thc:"", name:"Mix", sub:"Sativa & Hash", prices:[4.75,12.5,16.75,40], strength:2 },
+            { thc:"", name:"Sativa / Hybrid / Mix", sub:"Mix = Sativa & Hash", prices:[4.75,12.5,16.75,40], strength:2 },
             { thc:"", name:"Cali Regular", customPrice:"6", strength:2 },
             { thc:"", name:"Cali Special", customPrice:"8", strength:3 },
           ]
@@ -753,7 +751,7 @@ const STORAGE_KEY = "cgg-menu2-data-v1";
    standaarddata gebruikt in plaats van de verouderde opgeslagen data — dit
    voorkomt dat updates "niet lijken door te komen" op apparaten die het
    menu al eerder hebben geopend/bewerkt. */
-const MENU_VERSION = 1;
+const MENU_VERSION = 2;
 
 function loadMenu(){
   try{
