@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Coffeeshop Green Guys — Menukaart</title>
+<title>Coffeeshop Green Guys — Menukaart 2 (Hash, Joints, Edibles, Others)</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
@@ -264,6 +264,75 @@
     margin-left:4px;
   }
 
+  /* Scheidingsregel binnen een gewicht-tabel (bv. Joints: hasj vs gewone joints) */
+  .row-divider td{
+    padding: 7px 0 !important;
+    border: none !important;
+    background: transparent !important;
+  }
+
+  /* Prijs die over alle grid-kolommen heen loopt, zonder raster
+     (bv. Cali Regular/Special, Wonka Meld per 0.5 gram) */
+  .price-span{
+    text-align:left !important;
+    padding-left: 16px !important;
+    color: var(--gold);
+    font-weight:700;
+  }
+  .price-span .unit{
+    color: var(--muted);
+    font-weight:400;
+    font-size: 0.85em;
+    margin-left:4px;
+  }
+
+  /* Merken-vergelijkingstabel (Others: papers per merk) */
+  .price-table.brand-matrix col.col-name-wide{ width: 42%; }
+  .price-table.brand-matrix col.col-brand{ width: auto; }
+  .price-table.brand-matrix thead th{ text-align:center; }
+  .price-table.brand-matrix thead th.th-name{ text-align:left; }
+  .price-table.brand-matrix tbody td.price{ text-align:center; color: var(--cream); font-weight:600; }
+  .pname-sub-inline{
+    font-weight:400;
+    font-size: 0.78em;
+    color: var(--muted);
+    margin-left: 4px;
+  }
+
+  /* Accessoire-lijst (Others: losse producten, evt. twee kolommen naast elkaar) */
+  .accessory-list-wrap{
+    display:flex;
+    gap: clamp(16px,2vw,32px);
+    padding: 4px 20px 14px;
+    flex-wrap: wrap;
+  }
+  .accessory-list{
+    flex: 1 1 220px;
+    min-width: 200px;
+  }
+  .accessory-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .accessory-row:last-child{ border-bottom:none; }
+  .accessory-name{
+    font-weight:600;
+    font-size: clamp(12px,1vw,14px);
+    color: var(--cream);
+  }
+  .accessory-price{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:700;
+    font-size: clamp(12px,1vw,14px);
+    color: var(--gold);
+    white-space:nowrap;
+  }
+  .combo-spacer{ height: 14px; }
+
   footer{
     position:relative; z-index:1;
     text-align:center;
@@ -515,11 +584,11 @@
     display:block;
     flex: 1 1 0;
     min-width:0;
-    padding-top: 1.8em;
+    padding-top: 1.5em;
   }
   #tv-stage .t-col:first-child{ margin-right: 1.5625em; }
   #tv-stage .t-col:last-child{ margin-left: 1.5625em; }
-  #tv-stage .t-col .category{ margin-bottom: 1.9em; }
+  #tv-stage .t-col .category{ margin-bottom: 1.2em; }
   #tv-stage .t-col .category:last-child{ margin-bottom: 0; }
 
   #tv-stage .t-footer{
@@ -532,17 +601,28 @@
   }
 
   #tv-stage .category{ margin-top:0; }
-  #tv-stage .ribbon-wrap{ margin-top: -1.3em; }
-  #tv-stage .ribbon{ font-size:1.75em; padding:0.55em 2.4em; }
-  #tv-stage .ribbon::after{ font-size:0.8em; margin-top:0.2em; }
-  #tv-stage .rows{ padding: 0.45em 1.3em 0.6em; }
-  #tv-stage .price-table thead th{ font-size:1em; padding:0.45em 0.4em 0.5em; }
-  #tv-stage .price-table tbody td{ padding:0.6em 0.3125em; }
+  #tv-stage .ribbon-wrap{ margin-top: -1.1em; }
+  #tv-stage .ribbon{ font-size:1.5em; padding:0.4em 2.2em; }
+  #tv-stage .ribbon::after{ font-size:0.75em; margin-top:0.15em; }
+  #tv-stage .rows{ padding: 0.25em 1.3em 0.35em; }
+  #tv-stage .price-table thead th{ font-size:1em; padding:0.3em 0.4em 0.35em; }
+  #tv-stage .price-table tbody td{ padding:0.4em 0.3125em; }
+  #tv-stage .row-divider td{ padding: 0.3em 0 !important; }
   #tv-stage .thc{ font-size:1.0625em; }
   #tv-stage .pname{ font-size:1.4375em; }
   #tv-stage .price{ font-size:1.25em; }
   #tv-stage .badge-free{ font-size:1.0625em; padding: 0.4em 0.85em; }
   #tv-stage .badge-highlight{ font-size:1.25em; padding: 0.45em 1em; }
+
+  /* Nieuwe elementen (Others-combo, spanning-prijzen) ook mee laten
+     schalen met de automatische TV-pasgrootte, i.p.v. vaste px-waarden. */
+  #tv-stage .accessory-list-wrap{ padding: 0.3em 1.3em 1em; gap: 1.6em; }
+  #tv-stage .accessory-row{ padding: 0.5em 0; }
+  #tv-stage .accessory-name{ font-size: 1.05em; }
+  #tv-stage .accessory-price{ font-size: 1.05em; }
+  #tv-stage .price-table.brand-matrix tbody td.price{ font-size: 1.05em; }
+  #tv-stage .price-span{ font-size: 1em; }
+  #tv-stage .pname-sub-inline{ font-size: 0.8em; }
 </style>
 </head>
 <body>
@@ -593,24 +673,30 @@ const DEFAULT_MENU = {
     {
       categories: [
         {
-          name: "Indica", sub: "Body & Relaxation", icon: "\u263E",
-          accent: "var(--c-indica)", accent2: "var(--c-indica-2)",
-          headerCols: ["1","2","3","4","5g"],
+          name: "Hash", icon: "\u25C6",
+          accent: "var(--mint)", accent2: "#2f8f74",
+          headerCols: ["1g","2g","3g","4g","5g"],
           items: [
-            { thc:"0.1%", name:"Black Mamba CBD", star:true, prices:[5,10,15,20,20], highlightLast:true, strength:1 },
-            { thc:"14%",  name:"Gruis / Gemalen",  star:true, prices:[6,12,18,24,24], highlightLast:true, strength:1 },
-            { thc:"14%",  name:"Snow White",       star:true, prices:[8.5,17,24,30,35], strength:1 },
-            { thc:"16%",  name:"Moon Flower",       prices:[10,19,27.5,36,42.5], strength:2 },
+            { thc:"Indica", name:"La Creme",    star:true, prices:[8.5,17,24,30,35], strength:2 },
+            { thc:"Sativa", name:"Lemon Hash",  star:true, prices:[10,19,27.5,36,42.5], strength:3 },
+            { thc:"Indica", name:"Maroc Gold",  star:true, prices:[12,24,32,42.5,50], strength:3 },
+            { thc:"Sativa", name:"Wonka Meld",  customPrice:'15 <span class="unit">per 0.5 gram</span>', strength:4 },
           ]
         },
         {
-          name: "Sativa", sub: "Energy & Focus", icon: "\u2600",
-          accent: "var(--c-sativa)", accent2: "var(--c-sativa-2)",
-          headerCols: ["1","2","3","4","5g"],
+          name: "Joints", sub: "Voorgedraaid", icon: "\u2726",
+          accent: "var(--c-california)", accent2: "var(--c-california-2)",
+          headerCols: ["1","3","4","10"],
+          thcHeaderLabel: "",
           items: [
-            { thc:"18%", name:"Amnesia / Silver", star:true, prices:[10,19,27.5,36,42.5], strength:2 },
-            { thc:"20%", name:"Lemon Haze",         prices:[12,24,32,42.5,50], strength:3 },
-            { thc:"23%", name:"Crystal Haze",       prices:[15,28,40,50,55], strength:4 },
+            { thc:"", name:"Hash Indica", prices:[3.5,10.5,12,30], strength:1 },
+            { thc:"", name:"Hash Sativa", prices:[4.75,12.5,16.75,40], strength:2 },
+            { thc:"", name:"Indica", divider:true, prices:[3.5,10.5,12,30], strength:1 },
+            { thc:"", name:"Sativa", prices:[4.75,12.5,16.75,40], strength:2 },
+            { thc:"", name:"Hybrid", prices:[4.75,12.5,16.75,40], strength:2 },
+            { thc:"", name:"Mix", sub:"Sativa & Hash", prices:[4.75,12.5,16.75,40], strength:2 },
+            { thc:"", name:"Cali Regular", customPrice:"6", strength:2 },
+            { thc:"", name:"Cali Special", customPrice:"8", strength:3 },
           ]
         }
       ]
@@ -618,23 +704,41 @@ const DEFAULT_MENU = {
     {
       categories: [
         {
-          name: "Hybrid", sub: "Best of both", icon: "\u25D1",
+          name: "Edibles", sub: "Eetbaar", icon: "\u25C8",
           accent: "var(--c-hybrid)", accent2: "var(--c-hybrid-2)",
-          headerCols: ["1","2","3","4","5g"],
+          kind: "singlePrice",
+          thcHeaderLabel: "MG",
           items: [
-            { thc:"21% Sativa", name:"Green Gelato",  prices:[12,24,32,42.5,50], sub:"Sunset Sherbet x Thin Mint Girl Scout Cookies", strength:3 },
-            { thc:"21% Indica", name:"Grape Ape",    prices:[12,24,32,42.5,50], sub:"Afghani x Mendocino Purps x Skunk ", strength:3 },
+            { thc:"40mg",  name:"Chocolate Piece",    price:3, strength:1 },
+            { thc:"80mg",  name:"Choco Chip Cookie", price:5, strength:2 },
+            { thc:"160mg", name:"Chocolate Bar",       price:10, strength:3 },
           ]
         },
         {
-          name: "California", sub: "Import specials", icon: "\u2726",
-          accent: "var(--c-california)", accent2: "var(--c-california-2)",
-          perGramOnly: true,
-          items: [
-            { thc:"20% Sativa", name:"Duban Poison",   perGram:10 },
-            { thc:"24% Indica", name:"Alien OG",         perGram:12, sub:"Alien Kush x OG Kush" },
-            { thc:"23% Indica", name:"BlueCheeseCake", perGram:12, sub:"Blueberry x Cheese" },
-            { thc:"23% – 29%",  name:"California Specials", sub:"Skilatti — Hybrid — 26% THC", perGram:15 },
+          name: "Others", sub: "Accessoires", icon: "\u2725",
+          accent: "var(--c-indica)", accent2: "var(--c-indica-2)",
+          kind: "othersCombo",
+          brands: ["Green Guys","Mascotte","Smoking","RAW"],
+          paperItems: [
+            { name:"Regular Paper", prices:["\u20AC 1","\u20AC 1.25","\u20AC 1.25",""] },
+            { name:"Brown Paper",   prices:["\u20AC 1","\u20AC 1.5","\u20AC 1.5",""] },
+            { name:"Combi Paper",   sub:"met filter", prices:["\u20AC 2","\u20AC 2.5","","\u20AC 2.5"] },
+          ],
+          accessoryLeft: [
+            { name:"Filters/Tips",           price:"\u20AC 0.75" },
+            { name:"Active Filters 4 / 34x", price:"\u20AC 1/6" },
+            { name:"Cones 12 / 34 (voorgedraaid)", price:"\u20AC 3/7" },
+            { name:"Metal Pipes + Screens",  price:"\u20AC 6" },
+            { name:"Glass Pipe (klein, lufka)", price:"\u20AC 1" },
+            { name:"Bong",                   price:"\u20AC 15" },
+          ],
+          accessoryRight: [
+            { name:"Lighter/Aansteker",       price:"\u20AC 1" },
+            { name:"Clipper Lighter",         price:"\u20AC 1.7" },
+            { name:"Blunt Wraps",             price:"\u20AC 3" },
+            { name:"Plastic Grinder",         price:"\u20AC 4" },
+            { name:"Metal Grinder",           price:"\u20AC 10" },
+            { name:"Plastic Cones for Joints", price:"\u20AC 0.5" },
           ]
         }
       ]
@@ -642,7 +746,7 @@ const DEFAULT_MENU = {
   ]
 };
 
-const STORAGE_KEY = "cgg-menu-data-v1";
+const STORAGE_KEY = "cgg-menu2-data-v1";
 
 function loadMenu(){
   try{
@@ -696,75 +800,184 @@ function renderCategory(cat){
   const rows = document.createElement("div");
   rows.className = "rows";
 
-  if (cat.perGramOnly){
-    const table = document.createElement("table");
-    table.className = "price-table";
-    table.innerHTML = `
-      <colgroup>
-        <col class="col-thc"><col class="col-name"><col>
-      </colgroup>
-      <thead>
-        <tr>
-          <th class="th-thc">THC <span class="th-strength-label">Sterkte</span></th>
-          <th class="th-name"></th>
-          <th class="th-gram-last">Prijs</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    `;
-    const tbody = table.querySelector("tbody");
-    cat.items.forEach(item => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td class="thc">${item.thc}${strengthDotsHtml(item)}</td>
-        <td class="pname${item.soldOut ? ' sold-out' : ''}"><span class="pname-main">${item.name}</span>${item.soldOut ? '<span class="pname-soldout-tag">Uitverkocht</span>' : ''}${item.sub ? `<br><span class="pname-sub">${item.sub}</span>` : ""}</td>
-        <td class="price perg">${fmt(item.perGram)}<span class="unit">per gram</span></td>
-      `;
-      tbody.appendChild(tr);
-    });
-    rows.appendChild(table);
+  if (cat.kind === "brandMatrix"){
+    rows.appendChild(renderBrandMatrixTable(cat));
+  } else if (cat.kind === "othersCombo"){
+    rows.appendChild(renderBrandMatrixTable({ brands: cat.brands, items: cat.paperItems }));
+    const spacer = document.createElement("div");
+    spacer.className = "combo-spacer";
+    rows.appendChild(spacer);
+    rows.appendChild(renderAccessoryList({ items: cat.accessoryLeft, columns2: cat.accessoryRight }));
+  } else if (cat.kind === "accessoryList"){
+    rows.appendChild(renderAccessoryList(cat));
+  } else if (cat.kind === "singlePrice"){
+    rows.appendChild(renderSinglePriceTable(cat));
+  } else if (cat.perGramOnly){
+    rows.appendChild(renderSinglePriceTable(cat, true));
   } else {
-    const table = document.createElement("table");
-    table.className = "price-table";
-    const gramHeads = cat.headerCols.slice(0,4).map(c=>`<th>${c}g</th>`).join("");
-    table.innerHTML = `
-      <colgroup>
-        <col class="col-thc"><col class="col-name">
-        <col class="col-gram"><col class="col-gram"><col class="col-gram"><col class="col-gram"><col class="col-gram">
-      </colgroup>
-      <thead>
-        <tr>
-          <th class="th-thc">THC <span class="th-strength-label">Sterkte</span></th>
-          <th class="th-name"></th>
-          ${gramHeads}
-          <th class="th-gram-last">${cat.headerCols[4]}</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    `;
-    const tbody = table.querySelector("tbody");
-    cat.items.forEach(item => {
-      const tr = document.createElement("tr");
-      const priceCells = [0,1,2,3].map(i =>
-        `<td class="price">${fmt(item.prices[i])}</td>`
-      ).join("");
-      const lastCell = item.free1g
-        ? `<td class="price"><span class="badge-free">+1g GRATIS</span></td>`
-        : (item.highlightLast
-            ? `<td class="price"><span class="badge-highlight">${fmt(item.prices[4])}</span></td>`
-            : `<td class="price">${fmt(item.prices[4])}</td>`);
-      tr.innerHTML = `
-        <td class="thc">${item.thc}${strengthDotsHtml(item)}</td>
-        <td class="pname${item.soldOut ? ' sold-out' : ''}"><span class="pname-main">${item.name}${item.star ? ' <span class="star">*</span>' : ''}</span>${item.soldOut ? '<span class="pname-soldout-tag">Uitverkocht</span>' : ''}${item.sub ? `<br><span class="pname-sub">${item.sub}</span>` : ""}</td>
-        ${priceCells}${lastCell}
-      `;
-      tbody.appendChild(tr);
-    });
-    rows.appendChild(table);
+    rows.appendChild(renderGridTable(cat));
   }
 
   el.appendChild(rows);
   return el;
+}
+
+/* Standaard gewicht-tabel (1..Ng), aantal prijskolommen volgt cat.headerCols.
+   Ondersteunt item.customPrice (tekst die over alle prijskolommen heen
+   getoond wordt, zonder grid — voor bv. "Cali Regular / Cali Special")
+   en item.divider (voegt een lege scheidingsregel toe vóór dit item). */
+function renderGridTable(cat){
+  const table = document.createElement("table");
+  table.className = "price-table";
+  const n = cat.headerCols.length;
+  const gramHeads = cat.headerCols.slice(0, n - 1).map(c => `<th>${c}</th>`).join("");
+  const colgroupExtra = cat.headerCols.slice(0, n - 1).map(() => `<col class="col-gram">`).join("");
+  table.innerHTML = `
+    <colgroup>
+      <col class="col-thc"><col class="col-name">
+      ${colgroupExtra}<col class="col-gram">
+    </colgroup>
+    <thead>
+      <tr>
+        <th class="th-thc">${cat.thcHeaderLabel !== undefined ? cat.thcHeaderLabel : "THC"} <span class="th-strength-label">Sterkte</span></th>
+        <th class="th-name"></th>
+        ${gramHeads}
+        <th class="th-gram-last">${cat.headerCols[n - 1]}</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  `;
+  const tbody = table.querySelector("tbody");
+  cat.items.forEach(item => {
+    if (item.divider){
+      const spacer = document.createElement("tr");
+      spacer.className = "row-divider";
+      spacer.innerHTML = `<td colspan="${n + 1}"></td>`;
+      tbody.appendChild(spacer);
+    }
+    const tr = document.createElement("tr");
+    let priceCellsHtml;
+    if (item.customPrice !== undefined){
+      priceCellsHtml = `<td class="price price-span" colspan="${n}">${item.customPrice}</td>`;
+    } else {
+      const priceCells = Array.from({length: n - 1}, (_, i) =>
+        `<td class="price">${fmt(item.prices[i])}</td>`
+      ).join("");
+      const lastIdx = n - 1;
+      const lastCell = item.free1g
+        ? `<td class="price"><span class="badge-free">+1g GRATIS</span></td>`
+        : (item.highlightLast
+            ? `<td class="price"><span class="badge-highlight">${fmt(item.prices[lastIdx])}</span></td>`
+            : `<td class="price">${fmt(item.prices[lastIdx])}</td>`);
+      priceCellsHtml = priceCells + lastCell;
+    }
+    tr.innerHTML = `
+      <td class="thc">${item.thc || ""}${strengthDotsHtml(item)}</td>
+      <td class="pname${item.soldOut ? ' sold-out' : ''}"><span class="pname-main">${item.name}${item.star ? ' <span class="star">*</span>' : ''}</span>${item.soldOut ? '<span class="pname-soldout-tag">Uitverkocht</span>' : ''}${item.sub ? `<br><span class="pname-sub">${item.sub}</span>` : ""}</td>
+      ${priceCellsHtml}
+    `;
+    tbody.appendChild(tr);
+  });
+  return table;
+}
+
+/* Enkele-prijs tabel: THC/mg + naam + één prijs rechts.
+   isPerGram=true toont "per gram" achter het bedrag (California-stijl),
+   anders staat het bedrag kaal (Edibles-stijl). */
+function renderSinglePriceTable(cat, isPerGram){
+  const table = document.createElement("table");
+  table.className = "price-table";
+  table.innerHTML = `
+    <colgroup>
+      <col class="col-thc"><col class="col-name"><col>
+    </colgroup>
+    <thead>
+      <tr>
+        <th class="th-thc">${cat.thcHeaderLabel !== undefined ? cat.thcHeaderLabel : "THC"} <span class="th-strength-label">Sterkte</span></th>
+        <th class="th-name"></th>
+        <th class="th-gram-last">Prijs</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  `;
+  const tbody = table.querySelector("tbody");
+  cat.items.forEach(item => {
+    const tr = document.createElement("tr");
+    const priceHtml = isPerGram
+      ? `${fmt(item.perGram)}<span class="unit">per gram</span>`
+      : `${fmt(item.price)}`;
+    tr.innerHTML = `
+      <td class="thc">${item.thc || ""}${strengthDotsHtml(item)}</td>
+      <td class="pname${item.soldOut ? ' sold-out' : ''}"><span class="pname-main">${item.name}</span>${item.soldOut ? '<span class="pname-soldout-tag">Uitverkocht</span>' : ''}${item.sub ? `<br><span class="pname-sub">${item.sub}</span>` : ""}</td>
+      <td class="price perg">${priceHtml}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+  return table;
+}
+
+/* Merken-vergelijkingstabel: productnaam links, daarna één prijskolom
+   per merk (cat.brands = ["Green Guys","Mascotte",...]). Lege waarden
+   worden als streepje getoond. */
+function renderBrandMatrixTable(cat){
+  const table = document.createElement("table");
+  table.className = "price-table brand-matrix";
+  const brandHeads = cat.brands.map(b => `<th>${b}</th>`).join("");
+  const colgroupExtra = cat.brands.map(() => `<col class="col-brand">`).join("");
+  table.innerHTML = `
+    <colgroup>
+      <col class="col-name-wide">${colgroupExtra}
+    </colgroup>
+    <thead>
+      <tr>
+        <th class="th-name"></th>
+        ${brandHeads}
+      </tr>
+    </thead>
+    <tbody></tbody>
+  `;
+  const tbody = table.querySelector("tbody");
+  cat.items.forEach(item => {
+    const tr = document.createElement("tr");
+    const cells = cat.brands.map((b, i) => {
+      const val = item.prices[i];
+      return `<td class="price">${val !== undefined && val !== null && val !== "" ? val : "—"}</td>`;
+    }).join("");
+    tr.innerHTML = `
+      <td class="pname"><span class="pname-main">${item.name}${item.sub ? ` <span class="pname-sub-inline">${item.sub}</span>` : ""}</span></td>
+      ${cells}
+    `;
+    tbody.appendChild(tr);
+  });
+  return table;
+}
+
+/* Simpele twee-koloms accessoire-lijst (naam + prijs), optioneel als
+   twee lijsten naast elkaar (cat.columns2 = tweede lijst met items). */
+function renderAccessoryList(cat){
+  const wrap = document.createElement("div");
+  wrap.className = "accessory-list-wrap";
+
+  function buildList(items){
+    const list = document.createElement("div");
+    list.className = "accessory-list";
+    items.forEach(item => {
+      const row = document.createElement("div");
+      row.className = "accessory-row";
+      row.innerHTML = `
+        <span class="accessory-name">${item.name}</span>
+        <span class="accessory-price">${item.price}</span>
+      `;
+      list.appendChild(row);
+    });
+    return list;
+  }
+
+  wrap.appendChild(buildList(cat.items));
+  if (cat.columns2 && cat.columns2.length){
+    wrap.appendChild(buildList(cat.columns2));
+  }
+  return wrap;
 }
 
 function renderAll(){
@@ -800,6 +1013,8 @@ function buildEditForm(){
   form.innerHTML = "";
 
   allCategories().forEach(cat => {
+    if (!cat.items) return; // 'othersCombo'-achtige categorieën hebben geen standaard items-array
+
     const block = document.createElement("div");
     block.className = "edit-cat-block";
     block.style.setProperty("--accent-label", cat.accent || "var(--mint-bright)");
@@ -817,10 +1032,13 @@ function buildEditForm(){
     addBtn.className = "add-item-btn";
     addBtn.textContent = "+ Product toevoegen aan " + cat.name;
     addBtn.addEventListener("click", () => {
-      if (cat.perGramOnly){
+      if (cat.kind === "singlePrice"){
+        cat.items.push({ thc:"", name:"Nieuw product", price: 10 });
+      } else if (cat.perGramOnly){
         cat.items.push({ thc:"", name:"Nieuw product", perGram: 10 });
       } else {
-        cat.items.push({ thc:"", name:"Nieuw product", prices:[0,0,0,0,0] });
+        const n = (cat.headerCols || ["1g","2g","3g","4g","5g"]).length;
+        cat.items.push({ thc:"", name:"Nieuw product", prices: new Array(n).fill(0) });
       }
       saveMenu(); renderAll(); buildEditForm();
     });
@@ -846,18 +1064,29 @@ function buildItemRow(cat, item, idx){
   subWrap.innerHTML = `<label>Subtekst (optioneel, onder de naam)</label><input type="text" data-field="sub" value="${item.sub || ""}">`;
   row.appendChild(subWrap);
 
-  if (cat.perGramOnly){
+  if (cat.kind === "singlePrice"){
+    const priceWrap = document.createElement("div");
+    priceWrap.innerHTML = `<label>Prijs (€)</label><input type="number" step="0.5" data-field="price" value="${item.price || 0}">`;
+    row.appendChild(priceWrap);
+  } else if (cat.perGramOnly){
     const priceWrap = document.createElement("div");
     priceWrap.innerHTML = `<label>Prijs per gram (€)</label><input type="number" step="0.5" data-field="perGram" value="${item.perGram || 0}">`;
     row.appendChild(priceWrap);
   } else {
+    const customWrap = document.createElement("div");
+    customWrap.innerHTML = `<label>Losse prijstekst (i.p.v. raster — laat leeg om het raster te gebruiken)</label><input type="text" data-field="customPrice" value="${item.customPrice || ""}">`;
+    row.appendChild(customWrap);
+
+    const n = (cat.headerCols || ["1g","2g","3g","4g","5g"]).length;
     const row5 = document.createElement("div");
     row5.className = "row5";
-    [0,1,2,3,4].forEach(i => {
+    row5.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
+    for (let i = 0; i < n; i++){
       const cell = document.createElement("div");
-      cell.innerHTML = `<label>${i+1}g</label><input type="number" step="0.5" data-price-idx="${i}" value="${(item.prices && item.prices[i]) || 0}">`;
+      const label = cat.headerCols ? cat.headerCols[i] : `${i+1}g`;
+      cell.innerHTML = `<label>${label}</label><input type="number" step="0.5" data-price-idx="${i}" value="${(item.prices && item.prices[i]) || 0}">`;
       row5.appendChild(cell);
-    });
+    }
     row.appendChild(row5);
 
     const flags = document.createElement("div");
@@ -865,6 +1094,7 @@ function buildItemRow(cat, item, idx){
     flags.innerHTML = `
       <label><input type="checkbox" data-field="star" ${item.star ? "checked" : ""}> Vanaf-5-euro (*)</label>
       <label><input type="checkbox" data-field="free1g" ${item.free1g ? "checked" : ""}> +1g gratis i.p.v. 5g-prijs</label>
+      <label><input type="checkbox" data-field="divider" ${item.divider ? "checked" : ""}> Scheidingsregel v\u00f3\u00f3r dit item</label>
       <label><input type="checkbox" data-field="highlightLast" ${item.highlightLast ? "checked" : ""}> 5g-prijs uitlichten (gouden badge)</label>
       <label><input type="checkbox" data-field="soldOut" ${item.soldOut ? "checked" : ""}> Tijdelijk uitverkocht (rode streep)</label>
     `;
@@ -890,20 +1120,27 @@ function buildItemRow(cat, item, idx){
       saveMenu(); renderAll();
     });
   });
-  row.querySelectorAll('[data-field="perGram"]').forEach(inp => {
+  row.querySelectorAll('[data-field="perGram"], [data-field="price"]').forEach(inp => {
     inp.addEventListener("input", () => {
-      item.perGram = parseFloat(inp.value) || 0;
+      item[inp.dataset.field] = parseFloat(inp.value) || 0;
+      saveMenu(); renderAll();
+    });
+  });
+  row.querySelectorAll('[data-field="customPrice"]').forEach(inp => {
+    inp.addEventListener("input", () => {
+      item.customPrice = inp.value ? inp.value : undefined;
       saveMenu(); renderAll();
     });
   });
   row.querySelectorAll('[data-price-idx]').forEach(inp => {
     inp.addEventListener("input", () => {
-      if (!item.prices) item.prices = [0,0,0,0,0];
+      const n = (cat.headerCols || ["1g","2g","3g","4g","5g"]).length;
+      if (!item.prices) item.prices = new Array(n).fill(0);
       item.prices[parseInt(inp.dataset.priceIdx)] = parseFloat(inp.value) || 0;
       saveMenu(); renderAll();
     });
   });
-  row.querySelectorAll('[data-field="star"], [data-field="free1g"], [data-field="highlightLast"], [data-field="soldOut"]').forEach(inp => {
+  row.querySelectorAll('[data-field="star"], [data-field="free1g"], [data-field="highlightLast"], [data-field="soldOut"], [data-field="divider"]').forEach(inp => {
     inp.addEventListener("change", () => {
       item[inp.dataset.field] = inp.checked;
       saveMenu(); renderAll();
@@ -1133,11 +1370,18 @@ var STOCK_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiXN
 
 /* menu-naam (hoofdletterongevoelig) -> sheet-naam (hoofdletterongevoelig) */
 var STOCK_SHEET_NAME_ALIASES = {
-  "black mamba cbd": "black mamba",
-  "gruis / gemalen": "gruis",
-  "amnesia / silver": "amnesia",
-  "bluecheesecake": "blue cheesecake",
-  "california specials": "cali special wegen"
+  "lemon hash": "lemon hasj",
+  "wonka meld": "wonka melts",
+  "hash indica": "indica hash joint",
+  "hash sativa": "sativa hash joint",
+  "indica": "indica joint",
+  "sativa": "sativa joint",
+  "hybrid": "hybrid joint",
+  "mix": "mix joint",
+  "cali regular": "cali regular joint",
+  "cali special": "cali special joint",
+  "chocolate piece": "choco piece",
+  "chocolate bar": "choco bar"
 };
 
 function parseCSVBasic(text){
@@ -1208,6 +1452,7 @@ function syncSoldOutFromSheet(){
 
       var changed = false;
       allCategories().forEach(function(cat){
+        if (!cat.items) return;
         cat.items.forEach(function(item){
           var key = lookupKey(item.name);
           if (Object.prototype.hasOwnProperty.call(statusMap, key)){
