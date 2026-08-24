@@ -597,10 +597,10 @@ const DEFAULT_MENU = {
           accent: "var(--c-indica)", accent2: "var(--c-indica-2)",
           headerCols: ["1","2","3","4","5g"],
           items: [
-            { thc:"0.1%", name:"Black Mamba CBD", star:true, prices:[5,10,15,20,20], highlightLast:true },
-            { thc:"14%",  name:"Gruis / Gemalen",  star:true, prices:[6,12,18,24,24], highlightLast:true },
-            { thc:"14%",  name:"Snow White",       star:true, prices:[8.5,17,24,30,35] },
-            { thc:"16%",  name:"Moon Flower",       prices:[10,19,27.5,36,42.5] },
+            { thc:"0.1%", name:"Black Mamba CBD", star:true, prices:[5,10,15,20,20], highlightLast:true, strength:1 },
+            { thc:"14%",  name:"Gruis / Gemalen",  star:true, prices:[6,12,18,24,24], highlightLast:true, strength:1 },
+            { thc:"14%",  name:"Snow White",       star:true, prices:[8.5,17,24,30,35], strength:1 },
+            { thc:"16%",  name:"Moon Flower",       prices:[10,19,27.5,36,42.5], strength:2 },
           ]
         },
         {
@@ -608,9 +608,9 @@ const DEFAULT_MENU = {
           accent: "var(--c-sativa)", accent2: "var(--c-sativa-2)",
           headerCols: ["1","2","3","4","5g"],
           items: [
-            { thc:"18%", name:"Amnesia / Silver", star:true, prices:[10,19,27.5,36,42.5] },
-            { thc:"20%", name:"Lemon Haze",         prices:[12,24,32,42.5,50] },
-            { thc:"23%", name:"Crystal Haze",       prices:[15,28,40,50,55] },
+            { thc:"18%", name:"Amnesia / Silver", star:true, prices:[10,19,27.5,36,42.5], strength:2 },
+            { thc:"20%", name:"Lemon Haze",         prices:[12,24,32,42.5,50], strength:3 },
+            { thc:"23%", name:"Crystal Haze",       prices:[15,28,40,50,55], strength:4 },
           ]
         }
       ]
@@ -622,8 +622,8 @@ const DEFAULT_MENU = {
           accent: "var(--c-hybrid)", accent2: "var(--c-hybrid-2)",
           headerCols: ["1","2","3","4","5g"],
           items: [
-            { thc:"21% Sativa", name:"Green Gelato",  prices:[12,24,32,42.5,50] },
-            { thc:"21% Indica", name:"Grape Ape",    prices:[12,24,32,42.5,50] },
+            { thc:"21% Sativa", name:"Green Gelato",  prices:[12,24,32,42.5,50], sub:"Sunset Sherbet x Thin Mint Girl Scout Cookies", strength:3 },
+            { thc:"21% Indica", name:"Grape Ape",    prices:[12,24,32,42.5,50], sub:"Afghani x Mendocino Purps x Skunk ", strength:3 },
           ]
         },
         {
@@ -631,8 +631,9 @@ const DEFAULT_MENU = {
           accent: "var(--c-california)", accent2: "var(--c-california-2)",
           perGramOnly: true,
           items: [
-            { thc:"24% Indica", name:"Alien OG",         perGram:12 },
-            { thc:"23% Indica", name:"BlueCheeseCake", perGram:12 },
+            { thc:"20% Sativa", name:"Duban Poison",   perGram:10 },
+            { thc:"24% Indica", name:"Alien OG",         perGram:12, sub:"Alien Kush x OG Kush" },
+            { thc:"23% Indica", name:"BlueCheeseCake", perGram:12, sub:"Blueberry x Cheese" },
             { thc:"23% – 29%",  name:"California Specials", sub:"Skilatti — Hybrid — 26% THC", perGram:15 },
           ]
         }
