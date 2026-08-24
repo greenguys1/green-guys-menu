@@ -643,22 +643,33 @@ const DEFAULT_MENU = {
 };
 
 const STORAGE_KEY = "cgg-menu-data-v1";
+/* Verhoog dit nummer bij elke wijziging aan DEFAULT_MENU hierboven. Als de
+   opgeslagen (localStorage) versie ouder is dan dit nummer, wordt de nieuwe
+   standaarddata gebruikt in plaats van de verouderde opgeslagen data — dit
+   voorkomt dat updates "niet lijken door te komen" op apparaten die het
+   menu al eerder hebben geopend/bewerkt. */
+const MENU_VERSION = 2;
 
 function loadMenu(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw){
       const parsed = JSON.parse(raw);
-      if (parsed && parsed.columns) return parsed;
+      if (parsed && parsed.columns && parsed.__version === MENU_VERSION) return parsed;
     }
   }catch(e){ console.warn("Kon opgeslagen menu niet lezen, standaard gebruikt.", e); }
-  return JSON.parse(JSON.stringify(DEFAULT_MENU));
+  const fresh = JSON.parse(JSON.stringify(DEFAULT_MENU));
+  fresh.__version = MENU_VERSION;
+  return fresh;
 }
 
 let MENU = loadMenu();
 
 function saveMenu(){
-  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(MENU)); }
+  try{
+    MENU.__version = MENU_VERSION;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(MENU));
+  }
   catch(e){ console.warn("Opslaan mislukt", e); }
 }
 
