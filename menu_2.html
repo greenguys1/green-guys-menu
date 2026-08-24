@@ -542,7 +542,7 @@
   #tv-stage .pname{ font-size:1.95em; }
   #tv-stage .price{ font-size:1.7em; }
   #tv-stage .badge-free{ font-size:1.4em; padding: 0.4em 0.85em; }
-  #tv-stage .badge-highlight{ font-size:1.7em; padding: 0.4em 0.9em; }
+  #tv-stage .badge-highlight{ font-size:1.5em; padding: 0.35em 0.7em; }
 </style>
 </head>
 <body>
@@ -648,7 +648,7 @@ const STORAGE_KEY = "cgg-menu-data-v1";
    standaarddata gebruikt in plaats van de verouderde opgeslagen data — dit
    voorkomt dat updates "niet lijken door te komen" op apparaten die het
    menu al eerder hebben geopend/bewerkt. */
-const MENU_VERSION = 2;
+const MENU_VERSION = 3;
 
 function loadMenu(){
   try{
@@ -1144,9 +1144,6 @@ var STOCK_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiXN
 
 /* menu-naam (hoofdletterongevoelig) -> sheet-naam (hoofdletterongevoelig) */
 var STOCK_SHEET_NAME_ALIASES = {
-  "black mamba cbd": "black mamba",
-  "gruis / gemalen": "gruis",
-  "amnesia / silver": "amnesia",
   "bluecheesecake": "blue cheesecake",
   "california specials": "cali special wegen"
 };
