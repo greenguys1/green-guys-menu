@@ -139,6 +139,13 @@
   .price-table col.col-thc{ width: 15%; }
   .price-table col.col-name{ width: 33%; }
   .price-table col.col-gram{ width: 10.4%; }
+  .price-table col.col-price-narrow{ width: 22%; }
+  .price-table.single-price-centered col.col-name{ width: 63%; }
+  .price-table.single-price-centered td.price{
+    text-align: center !important;
+    padding-left: 4px !important;
+    padding-right: 10px !important;
+  }
 
   .price-table thead th{
     font-family:'JetBrains Mono', monospace;
@@ -588,7 +595,7 @@
   }
   #tv-stage .t-col:first-child{ margin-right: 1.5625em; }
   #tv-stage .t-col:last-child{ margin-left: 1.5625em; }
-  #tv-stage .t-col .category{ margin-bottom: 0.95em; }
+  #tv-stage .t-col .category{ margin-bottom: 1.2em; }
   #tv-stage .t-col .category:last-child{ margin-bottom: 0; }
 
   #tv-stage .t-footer{
@@ -605,7 +612,7 @@
   #tv-stage .ribbon{ font-size:1.7em; padding:0.35em 2.2em; }
   #tv-stage .ribbon::after{ font-size:0.72em; margin-top:0.12em; }
   #tv-stage .rows{ padding: 0.2em 1.2em 0.3em; }
-  #tv-stage .price-table thead th{ font-size:1.05em; padding:0.25em 0.4em 0.3em; }
+  #tv-stage .price-table thead th{ font-size:1.4em; padding:0.25em 0.4em 0.3em; }
   #tv-stage .price-table tbody td{ padding:0.32em 0.3125em; }
   #tv-stage .row-divider td{ padding: 0.22em 0 !important; }
   #tv-stage .thc{ font-size:1.5em; }
@@ -622,7 +629,7 @@
   #tv-stage .accessory-name{ font-size: 1.05em; }
   #tv-stage .accessory-price{ font-size: 1.05em; }
   #tv-stage .price-table.brand-matrix tbody td.price{ font-size: 1.05em; }
-  #tv-stage .price-span{ font-size: 1em; }
+  #tv-stage .price-span{ font-size: 1.75em; }
   #tv-stage .pname-sub-inline{ font-size: 0.8em; }
 </style>
 </head>
@@ -655,7 +662,7 @@
 <main id="menu-root"></main>
 
 <footer>
-  <span class="star">*</span> weed met een sterretje wordt verkocht vanaf 5 euro
+  <span class="star">*</span> Hash met een sterretje wordt verkocht vanaf 5 euro
 </footer>
 
 <div id="tv-stage">
@@ -665,7 +672,7 @@
   <div class="t-main-wrap">
     <div class="t-main" id="tv-menu-root"></div>
   </div>
-  <div class="t-footer"><span class="star">*</span> weed met een sterretje wordt verkocht vanaf 5 euro</div>
+  <div class="t-footer"><span class="star">*</span> Hash met een sterretje wordt verkocht vanaf 5 euro</div>
 </div>
 
 <script>
@@ -674,7 +681,7 @@ const DEFAULT_MENU = {
     {
       categories: [
         {
-          name: "Hash", icon: "\u25C6",
+          name: "Hash", sub: "Gewogen hasj", icon: "\u25C6",
           accent: "var(--mint)", accent2: "#2f8f74",
           headerCols: ["1g","2g","3g","4g","5g"],
           items: [
@@ -778,7 +785,8 @@ function saveMenu(){
 
 function fmt(n){
   if (n === undefined || n === null) return "";
-  return Number.isInteger(n) ? n.toString() : n.toFixed(1).replace(/\.0$/,"");
+  if (Number.isInteger(n)) return n.toString();
+  return n.toFixed(2).replace(/0+$/,"").replace(/\.$/,"");
 }
 
 var STRENGTH_LABELS = ["", "Licht", "Gemiddeld", "Sterk", "Extreem"];
@@ -896,10 +904,11 @@ function renderGridTable(cat){
    anders staat het bedrag kaal (Edibles-stijl). */
 function renderSinglePriceTable(cat, isPerGram){
   const table = document.createElement("table");
-  table.className = "price-table";
+  table.className = "price-table" + (isPerGram ? "" : " single-price-centered");
+  const lastColClass = isPerGram ? "" : ` class="col-price-narrow"`;
   table.innerHTML = `
     <colgroup>
-      <col class="col-thc"><col class="col-name"><col>
+      <col class="col-thc"><col class="col-name"><col${lastColClass}>
     </colgroup>
     <thead>
       <tr>
@@ -919,7 +928,7 @@ function renderSinglePriceTable(cat, isPerGram){
     tr.innerHTML = `
       <td class="thc">${item.thc || ""}${strengthDotsHtml(item)}</td>
       <td class="pname${item.soldOut ? ' sold-out' : ''}"><span class="pname-main">${item.name}</span>${item.soldOut ? '<span class="pname-soldout-tag">Uitverkocht</span>' : ''}${item.sub ? `<br><span class="pname-sub">${item.sub}</span>` : ""}</td>
-      <td class="price perg">${priceHtml}</td>
+      <td class="price${isPerGram ? ' perg' : ''}">${priceHtml}</td>
     `;
     tbody.appendChild(tr);
   });
@@ -1284,7 +1293,7 @@ if (__qsMatch){
     const availH = zones.availH * 0.97;
     if (availH <= 0) return;
     const cols = tvMain.children;
-    let lo = 5, hi = 55, best = lo;
+    let lo = 5, hi = 60, best = lo;
     for (let i = 0; i < 14; i++){
       const mid = (lo + hi) / 2;
       tvMain.style.fontSize = mid + "px";
