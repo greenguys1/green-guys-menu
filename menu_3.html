@@ -188,7 +188,7 @@
   }
   .pname{
     font-weight:700;
-    font-size: clamp(14px,1.3vw,17px);
+    font-size: clamp(15px,1.55vw,20px);
     color: var(--cream);
   }
   .pname .star{ color: var(--free); }
@@ -233,7 +233,7 @@
     text-align:center;
     font-family:'JetBrains Mono', monospace;
     font-weight:600;
-    font-size: clamp(13px,1.15vw,15.5px);
+    font-size: clamp(14px,1.35vw,18px);
     color: var(--cream);
   }
   .price:last-child{ text-align:center; color: var(--gold); }
@@ -328,13 +328,13 @@
   .accessory-row:last-child{ border-bottom:none; }
   .accessory-name{
     font-weight:600;
-    font-size: clamp(12px,1vw,14px);
+    font-size: clamp(14px,1.2vw,17px);
     color: var(--cream);
   }
   .accessory-price{
     font-family:'JetBrains Mono', monospace;
     font-weight:700;
-    font-size: clamp(12px,1vw,14px);
+    font-size: clamp(14px,1.2vw,17px);
     color: var(--gold);
     white-space:nowrap;
   }
@@ -615,21 +615,21 @@
   #tv-stage .price-table thead th{ font-size:1.4em; padding:0.25em 0.4em 0.3em; }
   #tv-stage .price-table tbody td{ padding:0.32em 0.3125em; }
   #tv-stage .row-divider td{ padding: 0.22em 0 !important; }
-  #tv-stage .thc{ font-size:1.5em; }
-  #tv-stage .pname{ font-size:1.95em; }
-  #tv-stage .price{ font-size:1.75em; }
-  #tv-stage .badge-free{ font-size:1.3em; padding: 0.4em 0.85em; }
-  #tv-stage .badge-highlight{ font-size:1.5em; padding: 0.35em 0.7em; }
+  #tv-stage .thc{ font-size:1.55em; }
+  #tv-stage .pname{ font-size:2.25em; }
+  #tv-stage .price{ font-size:2em; }
+  #tv-stage .badge-free{ font-size:1.45em; padding: 0.4em 0.85em; }
+  #tv-stage .badge-highlight{ font-size:1.65em; padding: 0.35em 0.7em; }
 
 
   /* Nieuwe elementen (Others-combo, spanning-prijzen) ook mee laten
      schalen met de automatische TV-pasgrootte, i.p.v. vaste px-waarden. */
   #tv-stage .accessory-list-wrap{ padding: 0.3em 1.3em 1em; gap: 1.6em; }
   #tv-stage .accessory-row{ padding: 0.5em 0; }
-  #tv-stage .accessory-name{ font-size: 1.05em; }
-  #tv-stage .accessory-price{ font-size: 1.05em; }
-  #tv-stage .price-table.brand-matrix tbody td.price{ font-size: 1.05em; }
-  #tv-stage .price-span{ font-size: 1.75em; }
+  #tv-stage .accessory-name{ font-size: 1.2em; }
+  #tv-stage .accessory-price{ font-size: 1.2em; }
+  #tv-stage .price-table.brand-matrix tbody td.price{ font-size: 1.2em; }
+  #tv-stage .price-span{ font-size: 2em; }
   #tv-stage .pname-sub-inline{ font-size: 0.8em; }
 </style>
 </head>
@@ -1293,7 +1293,7 @@ if (__qsMatch){
     const availH = zones.availH * 0.97;
     if (availH <= 0) return;
     const cols = tvMain.children;
-    let lo = 5, hi = 60, best = lo;
+    let lo = 5, hi = 95, best = lo;
     for (let i = 0; i < 14; i++){
       const mid = (lo + hi) / 2;
       tvMain.style.fontSize = mid + "px";
