@@ -181,7 +181,7 @@
   }
   .pname{
     font-weight:700;
-    font-size: clamp(14px,1.3vw,17px);
+    font-size: clamp(15px,1.55vw,20px);
     color: var(--cream);
   }
   .pname .star{ color: var(--free); }
@@ -205,6 +205,21 @@
     padding: 2px 7px;
     vertical-align: middle;
   }
+  .pname-new-tag{
+    display:inline-block;
+    margin-left: 8px;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.62em;
+    font-weight:700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--bg-0);
+    background: linear-gradient(100deg, var(--mint-bright) 0%, #33b7ac 100%);
+    border-radius: 999px;
+    padding: 2px 8px;
+    vertical-align: middle;
+    box-shadow: 0 2px 8px rgba(95,209,172,0.4);
+  }
   .pname-sub{
     display:block;
     font-weight:500;
@@ -226,7 +241,7 @@
     text-align:center;
     font-family:'JetBrains Mono', monospace;
     font-weight:600;
-    font-size: clamp(13px,1.15vw,15.5px);
+    font-size: clamp(14px,1.35vw,18px);
     color: var(--cream);
   }
   .price:last-child{ text-align:center; color: var(--gold); }
@@ -538,9 +553,9 @@
   #tv-stage .rows{ padding: 0.3em 1.2em 0.45em; }
   #tv-stage .price-table thead th{ font-size:1.2em; padding:0.35em 0.4em 0.4em; }
   #tv-stage .price-table tbody td{ padding:0.45em 0.3125em; }
-  #tv-stage .thc{ font-size:1.5em; }
-  #tv-stage .pname{ font-size:1.95em; }
-  #tv-stage .price{ font-size:1.7em; }
+  #tv-stage .thc{ font-size:1.55em; }
+  #tv-stage .pname{ font-size:2.25em; }
+  #tv-stage .price{ font-size:1.95em; }
   #tv-stage .badge-free{ font-size:1.4em; padding: 0.4em 0.85em; }
   #tv-stage .badge-highlight{ font-size:1.5em; padding: 0.35em 0.7em; }
 </style>
@@ -631,10 +646,10 @@ const DEFAULT_MENU = {
           accent: "var(--c-california)", accent2: "var(--c-california-2)",
           perGramOnly: true,
           items: [
-            { thc:"20% Sativa", name:"Durban Poison",   perGram:10 },
-            { thc:"24% Indica", name:"Alien OG",         perGram:12, sub:"Alien Kush x OG Kush" },
-            { thc:"23% Indica", name:"BlueCheeseCake", perGram:12, sub:"Blueberry x Cheese" },
-            { thc:"23% – 29%",  name:"California Specials", sub:"Skilatti — Hybrid — 26% THC", perGram:15 },
+            { thc:"20% Sativa", name:"Durban Poison",   perGram:10, strength:2 },
+            { thc:"24% Indica", name:"Alien OG",         perGram:12, sub:"Alien Kush x OG Kush", strength:3 },
+            { thc:"24% Hybrid", name:"Pinyatti",         perGram:12, sub:"Piña Açai x Zoap", soldOut:true, strength:3, isNew:true },
+            { thc:"23% – 29%",  name:"California Specials", sub:"Skilatti — Hybrid — 26% THC", perGram:15, strength:4 },
           ]
         }
       ]
@@ -648,7 +663,7 @@ const STORAGE_KEY = "cgg-menu-data-v1";
    standaarddata gebruikt in plaats van de verouderde opgeslagen data — dit
    voorkomt dat updates "niet lijken door te komen" op apparaten die het
    menu al eerder hebben geopend/bewerkt. */
-const MENU_VERSION = 3;
+const MENU_VERSION = 4;
 
 function loadMenu(){
   try{
@@ -675,7 +690,8 @@ function saveMenu(){
 
 function fmt(n){
   if (n === undefined || n === null) return "";
-  return Number.isInteger(n) ? n.toString() : n.toFixed(1).replace(/\.0$/,"");
+  if (Number.isInteger(n)) return n.toString();
+  return n.toFixed(2).replace(/0+$/,"").replace(/\.$/,"");
 }
 
 var STRENGTH_LABELS = ["", "Licht", "Gemiddeld", "Sterk", "Extreem"];
@@ -729,7 +745,7 @@ function renderCategory(cat){
       tr.innerHTML = `
         <td class="thc">${item.thc}${strengthDotsHtml(item)}</td>
         <td class="pname${item.soldOut ? ' sold-out' : ''}"><span class="pname-main">${item.name}</span>${item.soldOut ? '<span class="pname-soldout-tag">Uitverkocht</span>' : ''}${item.sub ? `<br><span class="pname-sub">${item.sub}</span>` : ""}</td>
-        <td class="price perg">${fmt(item.perGram)}<span class="unit">per gram</span></td>
+        <td class="price perg">${fmt(item.perGram)}<span class="unit">per gram</span>${item.isNew ? '<span class="pname-new-tag">Nieuw</span>' : ''}</td>
       `;
       tbody.appendChild(tr);
     });
@@ -759,11 +775,12 @@ function renderCategory(cat){
       const priceCells = [0,1,2,3].map(i =>
         `<td class="price">${fmt(item.prices[i])}</td>`
       ).join("");
+      const newBadge = item.isNew ? '<span class="pname-new-tag">Nieuw</span>' : '';
       const lastCell = item.free1g
-        ? `<td class="price"><span class="badge-free">+1g GRATIS</span></td>`
+        ? `<td class="price"><span class="badge-free">+1g GRATIS</span>${newBadge}</td>`
         : (item.highlightLast
-            ? `<td class="price"><span class="badge-highlight">${fmt(item.prices[4])}</span></td>`
-            : `<td class="price">${fmt(item.prices[4])}</td>`);
+            ? `<td class="price"><span class="badge-highlight">${fmt(item.prices[4])}</span>${newBadge}</td>`
+            : `<td class="price">${fmt(item.prices[4])}${newBadge}</td>`);
       tr.innerHTML = `
         <td class="thc">${item.thc}${strengthDotsHtml(item)}</td>
         <td class="pname${item.soldOut ? ' sold-out' : ''}"><span class="pname-main">${item.name}${item.star ? ' <span class="star">*</span>' : ''}</span>${item.soldOut ? '<span class="pname-soldout-tag">Uitverkocht</span>' : ''}${item.sub ? `<br><span class="pname-sub">${item.sub}</span>` : ""}</td>
@@ -861,6 +878,27 @@ function buildItemRow(cat, item, idx){
     const priceWrap = document.createElement("div");
     priceWrap.innerHTML = `<label>Prijs per gram (€)</label><input type="number" step="0.5" data-field="perGram" value="${item.perGram || 0}">`;
     row.appendChild(priceWrap);
+
+    const flagsGram = document.createElement("div");
+    flagsGram.className = "flags";
+    flagsGram.innerHTML = `
+      <label><input type="checkbox" data-field="soldOut" ${item.soldOut ? "checked" : ""}> Tijdelijk uitverkocht (rode streep)</label>
+      <label><input type="checkbox" data-field="isNew" ${item.isNew ? "checked" : ""}> Nieuw product (groene "Nieuw"-badge)</label>
+    `;
+    row.appendChild(flagsGram);
+
+    const strengthWrapGram = document.createElement("div");
+    strengthWrapGram.innerHTML = `
+      <label>Sterkte (bolletjes)</label>
+      <select data-field="strength">
+        <option value="0" ${!item.strength ? "selected" : ""}>Geen indicatie</option>
+        <option value="1" ${item.strength === 1 ? "selected" : ""}>●○○○ Licht</option>
+        <option value="2" ${item.strength === 2 ? "selected" : ""}>●●○○ Gemiddeld</option>
+        <option value="3" ${item.strength === 3 ? "selected" : ""}>●●●○ Sterk</option>
+        <option value="4" ${item.strength === 4 ? "selected" : ""}>●●●● Extreem</option>
+      </select>
+    `;
+    row.appendChild(strengthWrapGram);
   } else {
     const row5 = document.createElement("div");
     row5.className = "row5";
@@ -878,6 +916,7 @@ function buildItemRow(cat, item, idx){
       <label><input type="checkbox" data-field="free1g" ${item.free1g ? "checked" : ""}> +1g gratis i.p.v. 5g-prijs</label>
       <label><input type="checkbox" data-field="highlightLast" ${item.highlightLast ? "checked" : ""}> 5g-prijs uitlichten (gouden badge)</label>
       <label><input type="checkbox" data-field="soldOut" ${item.soldOut ? "checked" : ""}> Tijdelijk uitverkocht (rode streep)</label>
+      <label><input type="checkbox" data-field="isNew" ${item.isNew ? "checked" : ""}> Nieuw product (groene "Nieuw"-badge)</label>
     `;
     row.appendChild(flags);
 
@@ -914,7 +953,7 @@ function buildItemRow(cat, item, idx){
       saveMenu(); renderAll();
     });
   });
-  row.querySelectorAll('[data-field="star"], [data-field="free1g"], [data-field="highlightLast"], [data-field="soldOut"]').forEach(inp => {
+  row.querySelectorAll('[data-field="star"], [data-field="free1g"], [data-field="highlightLast"], [data-field="soldOut"], [data-field="isNew"]').forEach(inp => {
     inp.addEventListener("change", () => {
       item[inp.dataset.field] = inp.checked;
       saveMenu(); renderAll();
@@ -1048,7 +1087,7 @@ if (__qsMatch){
     const availH = zones.availH * 0.97;
     if (availH <= 0) return;
     const cols = tvMain.children;
-    let lo = 5, hi = 60, best = lo;
+    let lo = 5, hi = 95, best = lo;
     for (let i = 0; i < 14; i++){
       const mid = (lo + hi) / 2;
       tvMain.style.fontSize = mid + "px";
