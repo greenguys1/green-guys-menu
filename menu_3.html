@@ -716,7 +716,9 @@ const DEFAULT_MENU = {
           thcHeaderLabel: "MG",
           items: [
             { thc:"40mg",  name:"Chocolate Piece",    price:3, strength:1 },
+            { thc:"40mg",  name:"Space Cake",          price:3, strength:1 },
             { thc:"80mg",  name:"Choco Chip Cookie", price:5, strength:2 },
+            { thc:"80mg",  name:"Brownie",             price:5, strength:2 },
             { thc:"160mg", name:"Chocolate Bar",       price:10, strength:3 },
           ]
         },
@@ -758,7 +760,7 @@ const STORAGE_KEY = "cgg-menu2-data-v1";
    standaarddata gebruikt in plaats van de verouderde opgeslagen data — dit
    voorkomt dat updates "niet lijken door te komen" op apparaten die het
    menu al eerder hebben geopend/bewerkt. */
-const MENU_VERSION = 2;
+const MENU_VERSION = 3;
 
 function loadMenu(){
   try{
