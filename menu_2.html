@@ -637,7 +637,6 @@ const DEFAULT_MENU = {
           accent: "var(--c-hybrid)", accent2: "var(--c-hybrid-2)",
           headerCols: ["1","2","3","4","5g"],
           items: [
-            { thc:"21% Sativa", name:"Green Gelato",  prices:[12,24,32,42.5,50], sub:"Sunset Sherbet x Thin Mint Girl Scout Cookies", strength:3 },
             { thc:"21% Indica", name:"Grape Ape",    prices:[12,24,32,42.5,50], sub:"Afghani x Mendocino Purps x Skunk ", strength:3 },
           ]
         },
@@ -664,7 +663,7 @@ const STORAGE_KEY = "cgg-menu-data-v1";
    standaarddata gebruikt in plaats van de verouderde opgeslagen data — dit
    voorkomt dat updates "niet lijken door te komen" op apparaten die het
    menu al eerder hebben geopend/bewerkt. */
-const MENU_VERSION = 5;
+const MENU_VERSION = 6;
 
 function loadMenu(){
   try{
